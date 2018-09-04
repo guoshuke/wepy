@@ -1,0 +1,76 @@
+
+  .container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;*/
+    justify-content: flex-start;
+    box-sizing: border-box;
+    background-color: #f3f3f3;
+  }
+  .marginTop25rpx{
+    margin-top: 25rpx;
+  }
+  .list{
+    width: 100vw;
+    display: flex;
+    background-color: #fff;
+    box-sizing: border-box;
+    padding-left: 3vw;
+    min-height: 9vh;
+  }
+  .item{
+    width: 97vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 3vw;
+    padding-left: 0;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f3f3f3;
+  }
+  .flex1{
+    flex:1
+  }
+  .leftTitle{
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+  }
+  .childrenAvatar{
+    width: 14vw;
+    height: 14vw;
+    border-radius: 14vw;
+    margin-right: 2vw;
+  }
+  .text{
+    margin-right: 5vw;
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+    text-align: right;
+  }
+  .placeholderClass{
+    color: #bbb;
+  }
+  .add,.delete{
+    width: 70vw;
+    text-align: center;
+    margin: 0 auto;
+    height:80rpx;
+    border-radius: 80rpx;
+    position: absolute;
+    left: 15vw;
+    font-size: 16px;
+    font-weight: 300;
+  }
+  .add{
+    bottom: 180rpx;
+    background:linear-gradient(to right,#32ECAC,#01C1D7);
+    color: #fff;
+  }
+  .delete{
+    bottom: 50rpx;
+    border: 1px solid #333;
+    color: #333;
+  }

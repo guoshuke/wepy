@@ -1,0 +1,101 @@
+@import "./../npm/wepy-com-toast/toast.wxss";
+.container._48ac126 {
+  background-color: #efefef;
+  justify-content: inherit;
+  height: 100vh;
+}
+.userInfo._48ac126 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: linear-gradient(to bottom right, #32ECAC, #01C1D7);
+  padding: 60rpx 0;
+}
+.userinfo-avatar._48ac126 {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.userinfo-nickname._48ac126 {
+  margin-top: 30rpx;
+  color: #FFF;
+  font-size: 40rpx;
+}
+.myChildren._48ac126 {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: scroll;
+  padding-top: 60rpx;
+  background-color: #fff;
+  margin-bottom: 40rpx;
+}
+.scroll._48ac126 {
+  width: 100vw;
+}
+.row._48ac126 {
+  width: 100vw;
+  white-space: nowrap;
+  margin: 40rpx 0;
+}
+.item._48ac126 {
+  width: 19vw;
+  margin: 0 3vw;
+  display: inline-block;
+  vertical-align: middle;
+}
+.childrenAvatar._48ac126 {
+  width: 100%;
+  height: 19vw;
+  border-radius: 50%;
+}
+.childrenNickname._48ac126 {
+  margin-top: 30rpx;
+  color: #999;
+  font-size: 40rpx;
+}
+.myChildrenTitle._48ac126 {
+  font-size: 16px;
+  color: #333;
+  font-weight: 200;
+}
+.padding3._48ac126 {
+  padding: 0 3vw;
+}
+.last._48ac126 {
+  width: 100vw;
+  background-color: #fff;
+}
+.lastItem._48ac126 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 3vw;
+  width: 97vw;
+  border-bottom: 1px solid #efefef;
+  box-sizing: border-box;
+  padding: 30rpx 3vw 30rpx 0;
+}
+.about._48ac126 {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+.version._48ac126 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+.add._48ac126 {
+  width: 19vw;
+  height: 19vw;
+  border-radius: 50%;
+  border: 1px dashed #999;
+  font-size: 60px;
+  font-weight: 100;
+  text-align: center;
+  line-height: 16vw;
+}

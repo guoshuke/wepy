@@ -1,0 +1,295 @@
+<template>
+  <view class="container">
+    <view class="userInfo" @tap="handleViewTap">
+      <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
+      <open-data type="userNickName" id="userName" class="userinfo-nickname"></open-data>
+    </view>
+    <view class="myChildren">
+      <view class="myChildrenTitle padding3">
+        我的孩子
+      </view>
+      <view class="scroll">
+        <scroll-view scroll-x class="row">
+          <repeat for='{{list}}' index="index" item="item" key="key" class="item">
+            <view class="item">
+              <image src='{{userInfo.avatarUrl}}' class="childrenAvatar"/>
+              <!--<text>{{userInfo.nickName+item.name}}</text>-->
+            </view>
+          </repeat>
+          <view class="item" @tap="addChildren">
+            <view class="add">+</view>
+          </view>
+        </scroll-view>
+      </view>
+      <toast/>
+    </view>
+    <view class="last">
+      <view class="lastItem" @tap="getChildrenList">
+        <text class="about">关于我们</text>
+        <text class="iconfont icon-left"></text>
+      </view>
+    </view>
+    <view class="last">
+      <view class="lastItem">
+        <text class="about">版本信息</text>
+        <text class="version">V1.0</text>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import Toast from 'wepy-com-toast'
+  import testMixin from '../mixins/test'
+
+  export default class my extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人中心'
+    }
+    data = {
+      list: [{name: 1}, {name: 2}, {name: 3}, {name: 4}, {name: 5}],
+      userInfo: {
+        nickName: '',
+        avatarUrl: ''
+      }
+
+    }
+    mixins = [testMixin]
+
+    components = {
+      toast: Toast
+    }
+
+    getUserInfo(){
+      let self=this
+      wepy.getStorage({key:'userInfo',complete:function (data) {
+
+        if(data.data){
+          self.userInfo=data.data
+        }
+      }})
+    }
+
+    toast(title, icon, cb) {
+      this.$invoke('toast', 'show', {
+        title: title,
+        img: icon || 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+      }).then((d) => {
+        cb && cb()
+      })
+    }
+    onLoad(){
+      this.getUserInfo()
+    }
+
+    methods = {
+
+//      agreeGetUser(e) {
+//        if (e.detail.userInfo) {
+//          debugger
+//          let self = this
+//          self.userInfo = e.detail.userInfo
+//
+//          wepy.setStorage({key: 'userInfo', data: self.userInfo})
+//
+//          self.$apply()
+//
+//        }
+//        else {
+//          this.toast('您还未授权')
+//        }
+//      }
+      addChildren(){
+        wepy.navigateTo({url:'addChildren'})
+      },
+      getChildrenList() {
+        const self = this
+        wepy.getStorage({key:'baseData',complete:function (data) {
+
+          if(data.data){
+            debugger
+            wepy.request({
+              url: self.baseurl + self.api + self.urls.getChildrenList,
+//            header: {
+//              'Content-Type': 'application/x-www-form-urlencoded'
+//            },
+              data: data.data,
+              method: 'POST',
+              success: function (f) {
+                console.log('code=========>' + f);
+
+                debugger
+                //self.$parent.globalData.userInfo = f.data.data
+              },
+              fail: function (err) {
+                console.log(err);
+              }
+
+            })
+          }
+        }})
+
+//            header: {
+//              'Content-Type': 'application/x-www-form-urlencoded'
+//            },
+
+
+//        wepy.request({
+//          url: 'http://glass.unimker.com/api/sendSms',
+//          data: {
+//            mobile: mobile
+//          },
+////            header: {
+////              'Content-Type': 'application/x-www-form-urlencoded'
+////            },
+//          method: 'POST',
+//          success: function (f) {
+//            console.log('code=========>' + f);
+//            if (f.data.code == 1) {
+//              console.log('开始计时');
+//              var time = 60
+//              var noTime = 0
+//              var s = setInterval(() => {
+//                noTime++
+//                console.log('剩余 ' + (time - noTime) + 's');
+//                if (noTime >= time) {
+//                  clearInterval(s)
+//
+//                }
+//              }, 1000)
+//            } else {
+//              this.toast(f.data.message)
+//            }
+//            //self.$parent.globalData.userInfo = f.data.data
+//          },
+//          fail: function (err) {
+//            console.log(err);
+//          }
+//        }) //
+//        wepy.request({
+//          url: 'http://glass.unimker.com/api/mobileBind',
+//          data: temp,
+////            header: {
+////              'Content-Type': 'application/x-www-form-urlencoded'
+////            },
+//          method: 'POST',
+//          success: function (f) {
+//            console.log('code=========>' + f);
+//            self.$parent.globalData.userInfo = f.data.data
+//          },
+//          fail: function (err) {
+//            console.log(err);
+//          }
+//        })
+      }
+    }
+  }
+</script>
+<style lang="less" scoped>
+
+  .container{
+    background-color: #efefef;
+    justify-content: inherit;
+    height: 100vh;
+  }
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background:linear-gradient(to bottom right,#32ECAC,#01C1D7);
+    padding:60rpx 0;
+  }
+
+  .userinfo-avatar {
+    width:160rpx;
+    height:160rpx;
+    border-radius:50%;
+    overflow:hidden;
+  }
+
+  .userinfo-nickname {
+    margin-top: 30rpx;
+    color: #FFF;
+    font-size: 40rpx;
+  }
+  .myChildren{
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+    overflow:scroll;
+    padding-top:60rpx;
+    background-color: #fff;
+    margin-bottom: 40rpx;
+  }
+  .scroll{
+    //height: 300rpx;
+    width: 100vw;
+  }
+  .row{
+    width: 100vw;
+    white-space: nowrap;
+    margin: 40rpx 0;
+  }
+  .item{
+    width: 19vw;
+    margin: 0 3vw;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .childrenAvatar{
+    width:100%;
+    height: 19vw;
+    border-radius:50%;
+  }
+  .childrenNickname{
+    margin-top: 30rpx;
+    color: #999;
+    font-size: 40rpx;
+  }
+  .myChildrenTitle{
+    font-size: 16px;
+    color: #333;
+    font-weight: 200;
+  }
+  .padding3{
+    padding:0 3vw;
+  }
+  .last{
+    width:100vw;
+    background-color: #fff;
+  }
+  .lastItem{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 3vw;
+    width: 97vw;
+    border-bottom: 1px solid #efefef;
+    box-sizing: border-box;
+    padding: 30rpx 3vw 30rpx 0;
+  }
+  .about{
+    flex: 1;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+  }
+  .version{
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+  }
+  .add{
+    width: 19vw;
+    height:19vw;
+    border-radius: 50%;
+    border: 1px dashed #999;
+    font-size: 60px;
+    font-weight: 100;
+    text-align: center;
+    line-height: 16vw;
+  }
+
+
+</style>

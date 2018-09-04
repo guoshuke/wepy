@@ -1,0 +1,52 @@
+
+  <div class="container">
+    <div class="list marginTop25rpx">
+      <div class="item" bindtap="uploadImg">
+        <span class="leftTitle flex1">头像</span>
+        <image src="{{avatarUrl}}" class="childrenAvatar"/>
+        <canvas canvas-id="myCanvas" style="width: 500px; height: 500px; display: none;"/>
+        <span class="iconfont icon-left"/>
+      </div>
+    </div>
+    <div class="list">
+      <div class="item">
+        <span class="leftTitle">昵称</span>
+        <input class="text flex1" maxlength="10" type="text" value="白浅"/>
+        <span class="iconfont icon-left"/>
+      </div>
+    </div>
+    <div class="list">
+      <div class="item">
+        <span class="leftTitle">性别</span>
+        <input class="text flex1" maxlength="1" type="text" value="男" placeholder="默认男"/>
+        <span class="iconfont icon-left"/>
+      </div>
+    </div>
+    <div class="list">
+      <div class="item">
+        <span class="leftTitle">出生日期</span>
+        <picker mode="date" value="{{date}}" start="1990-09-30" end="2018-10-01" class="flex1" bindchange="bindDateChange">
+          <view class="text">
+            {{date}}
+          </view>
+        </picker>
+        <span class="iconfont icon-left"/>
+      </div>
+    </div>
+    <div class="list">
+      <div class="item">
+        <span class="leftTitle">身高</span>
+        <input class="text flex1" maxlength="3" type="number" value="" placeholder="单位cm" placeholder-class="placeholderClass"/>
+        <span class="iconfont icon-left"/>
+      </div>
+    </div>
+    <div class="list">
+      <div class="item">
+        <span class="leftTitle">体重</span>
+        <input class="text flex1" maxlength="3" type="number" value="" placeholder="单位kg" placeholder-class="placeholderClass"/>
+        <span class="iconfont icon-left"/>
+      </div>
+    </div>
+    <button class="add">添加</button>
+    <button class="delete">删除</button>
+  </div>
