@@ -1,28 +1,28 @@
 
-  <view class="container _48ac126">
-    <view class="userInfo _48ac126" bindtap="handleViewTap">
-      <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar _48ac126"/>
-      <open-data type="userNickName" id="userName" class="userinfo-nickname _48ac126"/>
+  <view class="container _4afdeb5">
+    <view class="userInfo _4afdeb5" bindtap="handleViewTap">
+      <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar _4afdeb5"/>
+      <open-data type="userNickName" id="userName" class="userinfo-nickname _4afdeb5"/>
     </view>
-    <view class="myChildren _48ac126">
-      <view class="myChildrenTitle padding3 _48ac126">
+    <view class="myChildren _4afdeb5">
+      <view class="myChildrenTitle padding3 _4afdeb5">
         我的孩子
       </view>
-      <view class="scroll _48ac126">
-        <scroll-view scroll-x class="row _48ac126">
-          <block class="item _48ac126" wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
-            <view class="item _48ac126">
-              <image src="{{userInfo.avatarUrl}}" class="childrenAvatar _48ac126"/>
+      <view class="scroll _4afdeb5">
+        <scroll-view scroll-x class="row _4afdeb5">
+          <block class="item _4afdeb5" wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+            <view class="item _4afdeb5">
+              <image src="{{userInfo.avatarUrl}}" class="childrenAvatar _4afdeb5"/>
               <!--<text>{{userInfo.nickName+item.name}}</text>-->
             </view>
           </block>
-          <view class="item _48ac126" bindtap="addChildren">
-            <view class="add _48ac126">+</view>
+          <view class="item _4afdeb5" bindtap="addChildren">
+            <view class="add _4afdeb5">+</view>
           </view>
         </scroll-view>
       </view>
       
-    <view class="wetoast {{$toast$reveal ? 'wetoast_show' : ''}} _48ac126">
+    <view class="wetoast {{$toast$reveal ? 'wetoast_show' : ''}} _4afdeb5">
         <view class="wetoast__mask"/>
         <view class="wetoast__bd" animation="{{$toast$animationData}}">
             <block  wx:if="{{$toast$img}}">
@@ -37,16 +37,16 @@
     </view>
 
     </view>
-    <view class="last _48ac126">
-      <view class="lastItem _48ac126" bindtap="getChildrenList">
-        <text class="about _48ac126">关于我们</text>
-        <text class="iconfont icon-left _48ac126"/>
+    <view class="last _4afdeb5">
+      <view class="lastItem _4afdeb5" bindtap="getChildrenList">
+        <text class="about _4afdeb5">关于我们</text>
+        <text class="iconfont icon-left _4afdeb5"/>
       </view>
     </view>
-    <view class="last _48ac126">
-      <view class="lastItem _48ac126">
-        <text class="about _48ac126">版本信息</text>
-        <text class="version _48ac126">V1.0</text>
+    <view class="last _4afdeb5">
+      <view class="lastItem _4afdeb5">
+        <text class="about _4afdeb5">版本信息</text>
+        <text class="version _4afdeb5">V1.0</text>
       </view>
     </view>
   </view>
