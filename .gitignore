@@ -2,4 +2,6 @@
 *.temp
 /node_modules/
 /vendor/
-*.zip  
+/dist/
+/.idea/
+*.zip
