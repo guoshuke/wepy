@@ -1,126 +1,136 @@
 <style lang="less">
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
+    .container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+    }
 
-@font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1535957087000'); /* IE9*/
-  src: url('iconfont.eot?t=1535957087000#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAPkAAsAAAAABigAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFY8dkfyY21hcAAAAYAAAABKAAABcOcotapnbHlmAAABzAAAADQAAAA0+UnIR2hlYWQAAAIAAAAALQAAADYShDaVaGhlYQAAAjAAAAAcAAAAJAfeA4NobXR4AAACTAAAAAgAAAAICAAAAGxvY2EAAAJUAAAABgAAAAYAGgAAbWF4cAAAAlwAAAAeAAAAIAEOABRuYW1lAAACfAAAAUUAAAJtPlT+fXBvc3QAAAPEAAAAHQAAAC5tdmd6eJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkYWCcwMDKwMHUyXSGgYGhH0IzvmYwYuRgYGBiYGVmwAoC0lxTGByeMTxjYG7438AQw9zA0AAUZgTJAQDdJQvjeJztkLENgDAQA8/KQ4EYgSo1s1Cxf8kaycfAFrF0lnz66oEFKMmZBOhGjFxpZV/Y7IPqmxj+obW/c4cbrczs7uNb/tUL6ijqCWkAAAACAAAAAAK/AtwABgAHAAABJwEHCQEXAQK+If7GIQE6/sYhAVsBgCEBOyL+xv7GIgFcAAB4nGNgZGBgAGLlk/9exPPbfGXgZmEAgeubfsYh0ywMTHeAFAcDE4gHAFfLCy8AAAB4nGNgZGBgbvjfwBDDwgACQJKRARUwAQBHCAJrBAAAAAQAAAAAAAAAABoAAHicY2BkYGBgYuAAYgYwi4GBCwgZGP6D+QwACXYBIwAAeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAiZGJkZmBJSc1rYSBAQAJ7AHFAAAA') format('woff'),
-  url('iconfont.ttf?t=1535957087000') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1535957087000#iconfont') format('svg'); /* iOS 4.1- */
-}
+    @font-face {
+        font-family: "iconfont";
+        src: url('iconfont.eot?t=1535957087000'); /* IE9*/
+        src: url('iconfont.eot?t=1535957087000#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAPkAAsAAAAABigAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFY8dkfyY21hcAAAAYAAAABKAAABcOcotapnbHlmAAABzAAAADQAAAA0+UnIR2hlYWQAAAIAAAAALQAAADYShDaVaGhlYQAAAjAAAAAcAAAAJAfeA4NobXR4AAACTAAAAAgAAAAICAAAAGxvY2EAAAJUAAAABgAAAAYAGgAAbWF4cAAAAlwAAAAeAAAAIAEOABRuYW1lAAACfAAAAUUAAAJtPlT+fXBvc3QAAAPEAAAAHQAAAC5tdmd6eJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkYWCcwMDKwMHUyXSGgYGhH0IzvmYwYuRgYGBiYGVmwAoC0lxTGByeMTxjYG7438AQw9zA0AAUZgTJAQDdJQvjeJztkLENgDAQA8/KQ4EYgSo1s1Cxf8kaycfAFrF0lnz66oEFKMmZBOhGjFxpZV/Y7IPqmxj+obW/c4cbrczs7uNb/tUL6ijqCWkAAAACAAAAAAK/AtwABgAHAAABJwEHCQEXAQK+If7GIQE6/sYhAVsBgCEBOyL+xv7GIgFcAAB4nGNgZGBgAGLlk/9exPPbfGXgZmEAgeubfsYh0ywMTHeAFAcDE4gHAFfLCy8AAAB4nGNgZGBgbvjfwBDDwgACQJKRARUwAQBHCAJrBAAAAAQAAAAAAAAAABoAAHicY2BkYGBgYuAAYgYwi4GBCwgZGP6D+QwACXYBIwAAeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAiZGJkZmBJSc1rYSBAQAJ7AHFAAAA') format('woff'),
+        url('iconfont.ttf?t=1535957087000') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url('iconfont.svg?t=1535957087000#iconfont') format('svg'); /* iOS 4.1- */
+    }
 
-.iconfont {
-  font-family:"iconfont" !important;
-  font-size:16px;
-  font-style:normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+    .iconfont {
+        font-family: "iconfont" !important;
+        font-size: 16px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-.icon-left:before { content: "\e600"; }
+    .icon-left:before {
+        content: "\e600";
+    }
 
 
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
+    import wepy from 'wepy'
+    import 'wepy-async-function'
 
-import { setStore } from 'wepy-redux'
-import configStore from './store'
+    import {setStore} from 'wepy-redux'
+    import configStore from './store'
 
-const store = configStore()
-setStore(store)
+    const store = configStore()
+    setStore(store)
 
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/addChildren',
-      'pages/index',
-      'pages/t1',
-      'pages/my',
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: '眼镜小程序',
-      navigationBarTextStyle: 'black'
-    },
-    tabBar: {
-      list: [{
-        "pagePath": "pages/index",
-        "text": "首页",
-        "iconPath": "asset/1.jpg",
-        "selectedIconPath": "asset/1.jpg"
-      },{
-        "pagePath": "pages/t1",
-        "text": "新闻",
-        "iconPath": "asset/1.jpg",
-        "selectedIconPath": "asset/1.jpg"
-      },{
-        "pagePath": "pages/my",
-        "text": "我的",
-        "iconPath": "asset/1.jpg",
-        "selectedIconPath": "asset/1.jpg"
-      }]
+    export default class extends wepy.app {
+        config = {
+            pages: [
+                'pages/index',
+                'pages/t1',
+                'pages/my',
+                'pages/information',
+                'pages/addChildren',
+                'pages/personalInfo',
+            ],
+            window: {
+                backgroundTextStyle: 'light',
+                navigationBarBackgroundColor: '#fff',
+                navigationBarTitleText: '眼镜小程序',
+                navigationBarTextStyle: 'black',
+            },
+            tabBar: {
+                "selectedColor": "#3ad9d4",
+                list: [{
+                    "pagePath": "pages/index",
+                    "text": "健康记录",
+                    "iconPath": "asset/302.png",
+                    "selectedIconPath": "asset/301.png"
+                }, {
+                    "pagePath": "pages/t1",
+                    "text": "自查",
+                    "iconPath": "asset/312.png",
+                    "selectedIconPath": "asset/311.png"
+                },{
+                    "pagePath": "pages/information",
+                    "text": "资讯",
+                    "iconPath": "asset/322.png",
+                    "selectedIconPath": "asset/321.png"
+                },  {
+                    "pagePath": "pages/my",
+                    "text": "我的",
+                    "iconPath": "asset/332.png",
+                    "selectedIconPath": "asset/331.png"
+                }]
+            }
+        }
+
+        globalData = {
+            userInfo: null,
+            baseData: {
+                user_id: '',
+                login_token: ''
+            },
+            childrenList: []
+        }
+
+        constructor() {
+            super()
+            this.use('requestfix')
+        }
+
+        onLaunch() {
+            this.testAsync()
+        }
+
+        sleep(s) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve('promise resolved')
+                }, s * 1000)
+            })
+        }
+
+        async testAsync() {
+            const data = await this.sleep(3)
+            console.log(data)
+        }
+
+
+        getUserInfo(cb) {
+            const that = this
+
+            if (this.globalData.userInfo) {
+                return this.globalData.userInfo
+            }
+            wepy.getUserInfo({
+                success(res) {
+                    that.globalData.userInfo = res.userInfo
+                    cb && cb(res.userInfo)
+                }
+            })
+        }
+
+        onLoad() {
+
+        }
+
     }
-  }
-
-  globalData = {
-    userInfo: null,
-    baseData:{
-      user_id:'',
-      login_token:''
-    },
-    childrenList:[]
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-
-  onLaunch() {
-    this.testAsync()
-  }
-
-  sleep (s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
-  async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
-
-
-  getUserInfo(cb) {
-    const that = this
-
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
-  }
-  onLoad  () {
-
-  }
-
-}
 </script>

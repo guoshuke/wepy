@@ -1,0 +1,53 @@
+<template>
+    <view class="container">
+        <view class="userInfo">
+            <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
+            <open-data type="userNickName" id="userName" class="userinfo-nickname"></open-data>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import testMixin from '../mixins/test'
+//    import request   from '../mixins/service'
+
+    export default class information extends wepy.page {
+        config = {
+            navigationBarTitleText: '资讯'
+        }
+        data = {
+
+        }
+        mixins = [testMixin]
+
+    }
+</script>
+<style lang="less" scoped>
+
+    .container{
+        background-color: #efefef;
+        justify-content: inherit;
+        height: 100vh;
+    }
+    .userInfo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        background:linear-gradient(to bottom right,#32ECAC,#01C1D7);
+        padding:60rpx 0;
+    }
+
+    .userinfo-avatar {
+        width:160rpx;
+        height:160rpx;
+        border-radius:50%;
+        overflow:hidden;
+    }
+
+    .userinfo-nickname {
+        margin-top: 30rpx;
+        color: #FFF;
+        font-size: 40rpx;
+    }
+</style>

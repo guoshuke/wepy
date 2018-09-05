@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="userInfo" @tap="handleViewTap">
+    <view class="userInfo" @tap="goDetail">
       <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
       <open-data type="userNickName" id="userName" class="userinfo-nickname"></open-data>
     </view>
@@ -11,8 +11,8 @@
       <view class="scroll">
         <scroll-view scroll-x class="row">
           <repeat for='{{list}}' index="index" item="item" key="key" class="item">
-            <view class="item">
-              <image src='{{userInfo.avatarUrl}}' class="childrenAvatar"/>
+            <view class="item" bindtap="addChildren" data-id="{{item.id}}">
+              <image src='{{item.avatarurl}}' class="childrenAvatar"/>
               <!--<text>{{userInfo.nickName+item.name}}</text>-->
             </view>
           </repeat>
@@ -41,13 +41,14 @@
   import wepy from 'wepy'
   import Toast from 'wepy-com-toast'
   import testMixin from '../mixins/test'
+  import request   from '../mixins/service'
 
   export default class my extends wepy.page {
     config = {
       navigationBarTitleText: '个人中心'
     }
     data = {
-      list: [{name: 1}, {name: 2}, {name: 3}, {name: 4}, {name: 5}],
+      list: [],
       userInfo: {
         nickName: '',
         avatarUrl: ''
@@ -63,12 +64,28 @@
     getUserInfo(){
       let self=this
       wepy.getStorage({key:'userInfo',complete:function (data) {
-
         if(data.data){
           self.userInfo=data.data
         }
       }})
     }
+
+      getChildrenList() {
+          const self = this
+          request(
+              'getChildrenList',
+          ).then(res =>{
+              console.log( res);
+              self.data.list=self.list=res.data
+              self.setData({list:res.data})
+              self.$apply()
+
+          }).catch(err =>{
+              console.log(err);
+          })
+
+
+      }
 
     toast(title, icon, cb) {
       this.$invoke('toast', 'show', {
@@ -78,8 +95,11 @@
         cb && cb()
       })
     }
+    onShow(){
+        this.getChildrenList()
+    }
     onLoad(){
-      this.getUserInfo()
+        this.getUserInfo()
     }
 
     methods = {
@@ -99,35 +119,17 @@
 //          this.toast('您还未授权')
 //        }
 //      }
-      addChildren(){
-        wepy.navigateTo({url:'addChildren'})
-      },
-      getChildrenList() {
-        const self = this
-        wepy.getStorage({key:'baseData',complete:function (data) {
+      addChildren(e){
+          let id =e.currentTarget.dataset.id
 
-          if(data.data){
-            debugger
-            wepy.request({
-              url: self.baseurl + self.api + self.urls.getChildrenList,
-//            header: {
-//              'Content-Type': 'application/x-www-form-urlencoded'
-//            },
-              data: data.data,
-              method: 'POST',
-              success: function (f) {
-                console.log('code=========>' + f);
-
-                debugger
-                //self.$parent.globalData.userInfo = f.data.data
-              },
-              fail: function (err) {
-                console.log(err);
-              }
-
-            })
+          if(id){
+              wepy.navigateTo({url:'addChildren?id='+id})
           }
-        }})
+          wepy.navigateTo({url:'addChildren'})
+      },
+        goDetail(e){
+            wepy.navigateTo({url:'personalInfo'})
+        }
 
 //            header: {
 //              'Content-Type': 'application/x-www-form-urlencoded'
@@ -181,7 +183,7 @@
 //            console.log(err);
 //          }
 //        })
-      }
+
     }
   }
 </script>

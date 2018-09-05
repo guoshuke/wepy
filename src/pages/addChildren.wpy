@@ -1,140 +1,216 @@
 <template>
-  <div class="container">
-    <div class="list marginTop25rpx">
-      <div class="item" @tap="uploadImg">
-        <span class="leftTitle flex1">头像</span>
-        <image src='{{avatarUrl}}' class="childrenAvatar"/>
-        <canvas canvas-id='myCanvas' style="width: 500px; height: 500px; display: none;"></canvas>
-        <span class="iconfont icon-left"></span>
-      </div>
+    <div class="container">
+        <div class="content">
+            <div class="list marginTop25rpx">
+                <div class="item" @tap="uploadImg">
+                    <span class="leftTitle flex1">头像</span>
+                    <image src="{{avatarUrl}}"  class="childrenAvatar "/>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">昵称</span>
+                    <input class="text flex1" maxlength="10" type="text" value="{{nickName}}" bindblur="changeNickName"/>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">性别</span>
+                    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}" class="flex1">
+                        <view class="text">
+                            {{array[index]}}
+                        </view>
+                    </picker>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">出生日期</span>
+                    <picker mode="date" value="{{date}}" start="1990-09-30" end="2018-10-01" class="flex1"
+                            bindchange="bindDateChange">
+                        <view class="text">
+                            {{date}}
+                        </view>
+                    </picker>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">身高</span>
+                    <input class="text flex1" maxlength="3" type="number" value="{{height}}" placeholder="单位cm" bindblur="changeHeight"
+                           placeholder-class="placeholderClass"/>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">体重</span>
+                    <input class="text flex1" maxlength="3" type="number" value="{{weight}}" placeholder="单位kg" bindblur="changeWeight"
+                           placeholder-class="placeholderClass"/>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+        </div>
+        <canvas canvas-id='myCanvas' class="opacity0"></canvas>
+        <div class="last">
+            <div class="add" @tap="addChildren">{{childrenId?'更新':'添加'}}</div>
+            <div class="{{childrenId?'delete':'displayNone'}}" @tap="deleteChildren">删除</div>
+        </div>
+
     </div>
-    <div class="list">
-      <div class="item">
-        <span class="leftTitle">昵称</span>
-        <input class="text flex1" maxlength="10" type="text" value="白浅"/>
-        <span class="iconfont icon-left"></span>
-      </div>
-    </div>
-    <div class="list">
-      <div class="item">
-        <span class="leftTitle">性别</span>
-        <input class="text flex1" maxlength="1" type="text" value="男" placeholder="默认男"/>
-        <span class="iconfont icon-left"></span>
-      </div>
-    </div>
-    <div class="list">
-      <div class="item">
-        <span class="leftTitle">出生日期</span>
-        <picker mode="date" value="{{date}}" start="1990-09-30" end="2018-10-01" class="flex1" bindchange="bindDateChange">
-          <view class="text">
-            {{date}}
-          </view>
-        </picker>
-        <span class="iconfont icon-left"></span>
-      </div>
-    </div>
-    <div class="list">
-      <div class="item">
-        <span class="leftTitle">身高</span>
-        <input class="text flex1" maxlength="3" type="number" value="" placeholder="单位cm" placeholder-class="placeholderClass"/>
-        <span class="iconfont icon-left"></span>
-      </div>
-    </div>
-    <div class="list">
-      <div class="item">
-        <span class="leftTitle">体重</span>
-        <input class="text flex1" maxlength="3" type="number" value="" placeholder="单位kg" placeholder-class="placeholderClass"/>
-        <span class="iconfont icon-left"></span>
-      </div>
-    </div>
-    <button class="add">添加</button>
-    <button class="delete">删除</button>
-  </div>
 </template>
 <script>
     import wepy from 'wepy'
     import upng from 'upng-js'
-    import testMixin from '../mixins/test'
+    import request from '../mixins/service'
 
-    export default class addChildren extends wepy.page{
-      config = {
-        navigationBarTitleText: '添加孩子'
-      }
-      data = {
-        date:'2016-09-01',
-        list: [{name: 1}, {name: 2}, {name: 3}, {name: 4}, {name: 5}],
-        userInfo: {
-          nickName: '',
-          avatarUrl: ''
-        },
-        avatarUrl: ''
+    export default class addChildren extends wepy.page {
+        config = {
+            navigationBarTitleText: '添加孩子'
+        }
+        data = {
+            childrenId:null,
+            date: '2012-09-01',
+            nickName: '',
+            array:['女','男'],
+            index:1,//默认男
+            avatarUrl: 'data:image/jpeg;base64,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',
+            height:null,
+            weight:null,
 
-      }
+        }
 
-      mixins = [testMixin]
-      methods={
-        bindDateChange: function (e) {
-          console.log('picker发送选择改变，携带值为', e.detail.value)
-          this.setData({
-            date: e.detail.value
-          })
-        },
-        uploadImg:function () {
+        //mixins = [testMixin]
+        methods = {
+            bindDateChange: function (e) {
+                console.log('picker发送选择改变，携带值为', e.detail.value)
+                this.date=e.detail.value
+            },
+            bindPickerChange:function (e) {
+                console.log('index为', e.detail.value)
 
-            const ctx = wx.createCanvasContext('myCanvas')
-            const platform = wx.getSystemInfoSync().platform
-            const imgWidth = 500, imgHeight=500;
-            wx.chooseImage({
-              success: res => {
-                //生成的图片临时路径画成canvas
-                ctx.drawImage(res.tempFilePaths[0], 0, 0, imgWidth, imgHeight)
-                ctx.draw(false, () => {
-                  wx.canvasGetImageData({
-                    canvasId: 'myCanvas',
-                    x: 0,
-                    y: 0,
-                    width: imgWidth,
-                    height: imgHeight,
-                    success: res => {
-                      if (platform === 'ios') {
-                        // 兼容处理：ios获取的图片上下颠倒
-                        res = this.reverseImgData(res)
-                      }
-                      // 3. png编码
-                      let pngData = upng.encode([res.data.buffer], res.width, res.height)
-                      // 4. base64编码
-                      var base64 = wx.arrayBufferToBase64(res.data);
-                      debugger
-                      //let base64 = wx.arrayBufferToBase64(pngData)
-                      debugger
-                      console.log('data:image/jpeg;base64,' + base64)
-                      this.setData({
-                        avatarUrl: 'data:image/jpeg;base64,' + base64
-                      });
-                    },
-                    fail(res) {
-                      debugger
-                      console.log(res)
-                    },
-                  })
+                this.index=e.detail.value
+            },
+
+            changeWeight:function (e) {
+                console.log('值为', e.detail.value)
+                this.weight=e.detail.value
+            },
+            changeHeight:function (e) {
+                this.height=e.detail.value
+
+            },
+            changeNickName:function (e) {
+                this.nickName=e.detail.value
+            },
+
+
+            addChildren(){
+                let sendData={
+                    avatar:this.data.avatarUrl,
+                    nickname:this.data.nickName,
+                    sex:this.data.index,
+                    birthday:this.data.date,
+                    height:this.data.height,
+                    weight:this.data.weight
+                }
+                if(this.data.childrenId){
+                    sendData.id=this.data.childrenId
+
+                }
+                request('addChildren',sendData).then((res)=>{
+                    console.log(res);
+                    if(res.code==1){
+                        wx.showToast({title:res.message})
+                    }else {
+                        for(var key in res.message){
+                            debugger
+                            wx.showToast({title:res.message[key][0]})
+                        }
+                    }
+                }).catch((err)=>{
+                    console.log(err);
                 })
-              }
-            })
-          },
-          //ios图片处理
-          reverseImgData(res) {
-            var w = res.width
-            var h = res.height
-            let con = 0
-            for (var i = 0; i < h / 2; i++) {
-              for (var j = 0; j < w * 4; j++) {
-                con = res.data[i * w * 4 + j]
-                res.data[i * w * 4 + j] = res.data[(h - i - 1) * w * 4 + j]
-                res.data[(h - i - 1) * w * 4 + j] = con
-              }
-            }
-            return res
-          }
+
+
+
+            },
+
+            deleteChildren(){
+                request('delChild',{id:this.data.childrenId}).then((res)=>{
+                    console.log(res);
+                    if(res.code==1){
+                        wx.showToast({title:res.message})
+                    }else {
+                        for(var key in res.message){
+                            debugger
+                            wx.showToast({title:res.message,icon:'none'})
+                        }
+                    }
+                }).catch((err)=>{
+                    debugger
+                    wx.showToast({title:err.error,icon:'none'})
+                })
+            },
+
+            uploadImg: function () {
+                const self = this
+
+                wx.chooseImage({
+                    success: res => {
+                        //生成的图片临时路径画成canvas
+                        const ctx = wx.createCanvasContext('myCanvas')
+                        const platform = wx.getSystemInfoSync().platform
+                        const imgWidth = 60, imgHeight = 60;
+                        ctx.drawImage(res.tempFilePaths[0], 0, 0, imgWidth, imgHeight)
+                        ctx.draw(false, () => {
+                            wx.canvasGetImageData({
+                                canvasId: 'myCanvas',
+                                x: 0,
+                                y: 0,
+                                width: imgWidth,
+                                height: imgHeight,
+                                success: res => {
+
+                                    if (platform === 'ios') {
+                                        // 兼容处理：ios获取的图片上下颠倒
+                                        wx.showToast({title:'我执行了2'})
+
+                                        res = self.reverseImgData(res)
+                                    }
+
+                                    // 3. png编码
+                                    let pngData = upng.encode([res.data.buffer], res.width, res.height)
+                                    // 4. base64编码
+
+                                    let base64 = wx.arrayBufferToBase64(pngData)
+
+                                    console.log('data:image/jpeg;base64,' + base64)
+                                    let newBase64 = 'data:image/jpeg;base64,' + base64
+                                    wx.showModal({title:'newBase64',content:newBase64})
+//                                    self.setData({
+//                                        avatarUrl: 'data:image/jpeg;base64,' + base64
+//                                    });
+                                    self.avatarUrl='data:image/jpeg;base64,' + base64
+                                    self.$apply()
+
+                                },
+                                fail(res) {
+                                    wx.showToast({title:'我执行了3'})
+
+                                    console.log(res)
+                                },
+                            })
+                        })
+                    }
+                })
+            },
+            //ios图片处理
+
 
 
 //          const self = this
@@ -184,83 +260,173 @@
 //            }
 //          })
 //        }
-      }
+        }
+
+        reverseImgData(res) {
+            var w = res.width
+            var h = res.height
+            let con = 0
+            for (var i = 0; i < h / 2; i++) {
+                for (var j = 0; j < w * 4; j++) {
+                    con = res.data[i * w * 4 + j]
+                    res.data[i * w * 4 + j] = res.data[(h - i - 1) * w * 4 + j]
+                    res.data[(h - i - 1) * w * 4 + j] = con
+                }
+            }
+            return res
+        }
+
+        getChildInfo(data){
+
+            this.weight=data.weight
+            this.height=data.height
+            this.date=data.birthday// res.data
+            this.nickName= data.nickname
+            this.index=data.sex
+            this.avatar=data.avatarurl
+            this.$apply()
+        }
+
+        onLoad(option){
+            console.log(option);
+            let self = this
+            this.childrenId=option.id
+            if(option.id){
+                request('getChildInfo',{id:option.id}).then(res=>{
+                    console.log(res.data);
+//                    self.data.date=res.data.birthday// res.data
+//                    self.nickName= res.data.nickname
+//                    self.index=res.data.sex//默认男
+//                    self.avatar=res.data.avatarurl
+                    self.getChildInfo(res.data)
+                }).catch(err=>{
+
+                })
+            }
+//            header: {
+//              'Content-Type': 'application/x-www-form-urlencoded'
+//            },
+
+
+
+        }
     }
 </script>
 <style>
-  .container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    /*align-items: center;*/
-    justify-content: flex-start;
-    box-sizing: border-box;
-    background-color: #f3f3f3;
-  }
-  .marginTop25rpx{
-    margin-top: 25rpx;
-  }
-  .list{
-    width: 100vw;
-    display: flex;
-    background-color: #fff;
-    box-sizing: border-box;
-    padding-left: 3vw;
-    min-height: 9vh;
-  }
-  .item{
-    width: 97vw;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 3vw;
-    padding-left: 0;
-    box-sizing: border-box;
-    border-bottom: 1px solid #f3f3f3;
-  }
-  .flex1{
-    flex:1
-  }
-  .leftTitle{
-    font-size: 13px;
-    font-weight: 400;
-    color: #666;
-  }
-  .childrenAvatar{
-    width: 14vw;
-    height: 14vw;
-    border-radius: 14vw;
-    margin-right: 2vw;
-  }
-  .text{
-    margin-right: 5vw;
-    font-size: 13px;
-    font-weight: 400;
-    color: #666;
-    text-align: right;
-  }
-  .placeholderClass{
-    color: #bbb;
-  }
-  .add,.delete{
-    width: 70vw;
-    text-align: center;
-    margin: 0 auto;
-    height:80rpx;
-    border-radius: 80rpx;
-    position: absolute;
-    left: 15vw;
-    font-size: 16px;
-    font-weight: 300;
-  }
-  .add{
-    bottom: 180rpx;
-    background:linear-gradient(to right,#32ECAC,#01C1D7);
-    color: #fff;
-  }
-  .delete{
-    bottom: 50rpx;
-    border: 1px solid #333;
-    color: #333;
-  }
+    .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: #f3f3f3;
+    }
+    .opacity0{
+        opacity: 0;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        left: -1000px;
+        bottom: 100px;
+    }
+    .displayNone{
+        display: none;
+    }
+
+    .marginTop25rpx {
+        margin-top: 25 rpx;
+    }
+
+    .list {
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding-left: 3vw;
+        min-height: 9vh;
+    }
+
+    .item {
+        width: 97vw;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 3vw;
+        padding-left: 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f3f3f3;
+    }
+
+    .flex1 {
+        flex: 1
+    }
+
+    .leftTitle {
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+    }
+
+    .childrenAvatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 14vw;
+        margin-right: 2vw;
+        overflow: hidden;
+    }
+
+    .text {
+        margin-right: 5vw;
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+        text-align: right;
+    }
+
+    .placeholderClass {
+        color: #bbb;
+    }
+
+    .add, .delete {
+
+    }
+    .last{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .add {
+        display: inline-block;
+        width: 70vw;
+        text-align: center;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 40px;
+        /*position: absolute;*/
+        left: 15vw;
+        font-size: 16px;
+        font-weight: 300;
+        background: linear-gradient(to right, #32ECAC, #01C1D7);
+        color: #fff;
+        margin-bottom:20px;
+    }
+
+    .delete {
+        display: inline-block;
+        width: 70vw;
+        text-align: center;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 40px;
+        /*position: absolute;*/
+        left: 15vw;
+        font-size: 16px;
+        font-weight: 300;
+        border: 1px solid #333;
+        color: #333;
+        margin-bottom: 20px;
+    }
 </style>
