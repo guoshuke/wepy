@@ -1,10 +1,10 @@
 @import "./../npm/wepy-com-toast/toast.wxss";
-.container._caa17ee {
+.container._4afdeb5 {
   background-color: #efefef;
   justify-content: inherit;
   height: 100vh;
 }
-.userInfo._caa17ee {
+.userInfo._4afdeb5 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,18 +12,18 @@
   background: linear-gradient(to bottom right, #32ECAC, #01C1D7);
   padding: 60rpx 0;
 }
-.userinfo-avatar._caa17ee {
+.userinfo-avatar._4afdeb5 {
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
   overflow: hidden;
 }
-.userinfo-nickname._caa17ee {
+.userinfo-nickname._4afdeb5 {
   margin-top: 30rpx;
   color: #FFF;
   font-size: 40rpx;
 }
-.myChildren._caa17ee {
+.myChildren._4afdeb5 {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -32,43 +32,43 @@
   background-color: #fff;
   margin-bottom: 40rpx;
 }
-.scroll._caa17ee {
+.scroll._4afdeb5 {
   width: 100vw;
 }
-.row._caa17ee {
+.row._4afdeb5 {
   width: 100vw;
   white-space: nowrap;
   margin: 40rpx 0;
 }
-.item._caa17ee {
+.item._4afdeb5 {
   width: 19vw;
   margin: 0 3vw;
   display: inline-block;
   vertical-align: middle;
 }
-.childrenAvatar._caa17ee {
+.childrenAvatar._4afdeb5 {
   width: 100%;
   height: 19vw;
   border-radius: 50%;
 }
-.childrenNickname._caa17ee {
+.childrenNickname._4afdeb5 {
   margin-top: 30rpx;
   color: #999;
   font-size: 40rpx;
 }
-.myChildrenTitle._caa17ee {
+.myChildrenTitle._4afdeb5 {
   font-size: 16px;
   color: #333;
   font-weight: 200;
 }
-.padding3._caa17ee {
+.padding3._4afdeb5 {
   padding: 0 3vw;
 }
-.last._caa17ee {
+.last._4afdeb5 {
   width: 100vw;
   background-color: #fff;
 }
-.lastItem._caa17ee {
+.lastItem._4afdeb5 {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -78,18 +78,18 @@
   box-sizing: border-box;
   padding: 30rpx 3vw 30rpx 0;
 }
-.about._caa17ee {
+.about._4afdeb5 {
   flex: 1;
   font-size: 14px;
   font-weight: 400;
   color: #666;
 }
-.version._caa17ee {
+.version._4afdeb5 {
   font-size: 14px;
   font-weight: 400;
   color: #666;
 }
-.add._caa17ee {
+.add._4afdeb5 {
   width: 19vw;
   height: 19vw;
   border-radius: 50%;
