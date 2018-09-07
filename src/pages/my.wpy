@@ -30,7 +30,7 @@
       </view>
     </view>
     <view class="last">
-      <view class="lastItem">
+      <view class="lastItem" @tap="goHeightOrWeight">
         <text class="about">版本信息</text>
         <text class="version">V1.0</text>
       </view>
@@ -52,8 +52,8 @@
       userInfo: {
         nickName: '',
         avatarUrl: ''
-      }
-
+      },
+      id:'',
     }
     mixins = [testMixin]
 
@@ -77,6 +77,7 @@
           ).then(res =>{
               console.log( res);
               self.data.list=self.list=res.data
+              self.data.id = res.data[0]['id']
               self.setData({list:res.data})
               self.$apply()
 
@@ -85,6 +86,11 @@
           })
 
 
+      }
+      //跳转到身高体重页
+      goHeightOrWeight(){
+          const self = this;
+          wepy.navigateTo({url:'heightOrWeight?id='+self.data.id});//id 孩子id
       }
 
     toast(title, icon, cb) {

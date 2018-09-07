@@ -49,6 +49,8 @@
                 'pages/information',
                 'pages/addChildren',
                 'pages/personalInfo',
+                'pages/heightOrWeight',
+                'pages/addHeightOrWeight',
             ],
             window: {
                 backgroundTextStyle: 'light',

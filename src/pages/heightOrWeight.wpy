@@ -1,0 +1,321 @@
+<template>
+    <view class="container">
+        <div class="list marginB40">
+            <div class="item">
+                <div class="col-5 statistics">标准身高：139.0-149.0cm</div>
+                <div class="col-5 statistics">标准体重：31-33kg</div>
+            </div>
+        </div>
+        <div class="list">
+            <div class="item">
+                <span class="leftTitle">身高体重测量记录</span>
+            </div>
+        </div>
+        <div class="list-ul-title">
+            <div class="item">
+                <div class="col-3 titlec">身高cm</div>
+                <div class="col-3 titlec">体重kg</div>
+                <div class="col-4 titlec">检查日期</div>
+            </div>
+        </div>
+        <view class="content">
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-3 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+            <div class="list-ul">
+                <div class="item">
+                    <div class="col-3 leftTitle">146</div>
+                    <div class="col-3 leftTitle">41</div>
+                    <div class="col-4 leftTitle">2018-08-20</div>
+                </div>
+            </div>
+
+        </view>
+        <div class="last">
+            <div class="add" @tap="goAddHeightOrWeight">添加</div>
+        </div>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import request from '../mixins/service'
+
+    export default class heightOrWeight extends wepy.page {
+
+        config = {
+            navigationBarTitleText: "身高体重"
+        }
+
+        data = {}
+
+        methods = {
+
+            goAddHeightOrWeight(){
+                const self = this;
+                wepy.navigateTo({url:'addHeightOrWeight?id='+self.data.id});//id 孩子id
+            }
+        }
+
+        onLoad() {
+
+        }
+
+    }
+</script>
+<style>
+    .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: #f3f3f3;
+    }
+    .content{
+        /*display:flex;*/
+        overflow:scroll;
+        justify-content: space-between;
+        flex:1
+    }
+    .marginB40{
+        margin-bottom:40rpx;
+    }
+    .list {
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding-left: 3vw;
+        min-height: 9vh;
+    }
+    .flex1 {
+        flex: 1
+    }
+    .col-2{
+        width:20%;
+    }
+    .col-3{
+        width:30%;
+    }
+    .col-4{
+        width:40%;
+    }
+    .col-5{
+        width:50%;
+    }
+    .col-6{
+        width:60%;
+    }
+    .color3c{
+        color:#ccc;
+    }
+    .statistics{
+        font-size: 13px;
+        /*font-weight: 400;*/
+        color:#4adabc;
+    }
+    .titlec{
+        font-size: 13px;
+        font-weight: 400;
+        color: #ccc;
+    }
+    .item {
+        width: 97vw;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 3vw;
+        padding-left: 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f3f3f3;
+    }
+    .leftTitle {
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+    }
+    .text {
+        margin-right: 5vw;
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+        text-align: right;
+    }
+    .list-ul-title{
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding:0 3vw 0 6vw;
+        min-height: 9vh;
+    }
+    .list-ul-title .item{
+        border-bottom:0;
+    }
+    .list-ul{
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding:0 3vw 0 6vw;
+        min-height: 3vh;
+    }
+    .list-ul .item{
+        border-bottom:0;
+    }
+
+    .last{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .add {
+        display: inline-block;
+        width: 70vw;
+        text-align: center;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 40px;
+        /*position: absolute;*/
+        left: 15vw;
+        font-size: 16px;
+        font-weight: 300;
+        background: linear-gradient(to right, #32ECAC, #01C1D7);
+        color: #fff;
+        margin-top:20px;
+        margin-bottom:20px;
+    }
+
+</style>
