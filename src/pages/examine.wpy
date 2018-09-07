@@ -1,0 +1,39 @@
+<template>
+    <view class="container">
+        {{temp}}
+   </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import testMixin from '../mixins/test'
+    import request   from '../mixins/service'
+
+    export default class examine extends wepy.page {
+        config = {
+            navigationBarTitleText: '资讯'
+        }
+        data = {
+            temp:''
+        }
+        mixins = [testMixin]
+        onLoad(option){
+            const self =this
+            request('getSysData',{type:option.id}).then(res=>{
+                console.log(res);
+                self.temp=res.data[1].content
+                self.$apply()
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+
+    }
+</script>
+<style lang="less" scoped>
+
+    .container{
+        background-color: #efefef;
+        justify-content: inherit;
+        height: 100vh;
+    }
+</style>

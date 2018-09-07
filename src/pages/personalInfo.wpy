@@ -1,53 +1,245 @@
 <template>
-    <view class="container">
-        <view class="userInfo">
-            <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
-            <open-data type="userNickName" id="userName" class="userinfo-nickname"></open-data>
-        </view>
-    </view>
+    <div class="container">
+        <div class="content">
+            <div class="list marginTop25rpx">
+                <div class="item" @tap="uploadImg">
+                    <span class="leftTitle flex1">头像</span>
+                    <image src="{{avatarUrl}}"  class="childrenAvatar "/>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">昵称</span>
+                    <input class="text flex1" maxlength="10" type="text" value="{{nickName}}" bindblur="changeNickName"/>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">出生日期</span>
+                    <picker mode="date" value="{{date}}" start="1990-09-30" end="2018-10-01" class="flex1"
+                            bindchange="bindDateChange">
+                        <view class="text">
+                            {{date}}
+                        </view>
+                    </picker>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item" @tap="changeMobile">
+                    <span class="leftTitle flex1">手机号</span>
+                    <span class="text">{{mobile}}</span>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </template>
 <script>
     import wepy from 'wepy'
-    import testMixin from '../mixins/test'
-    //    import request   from '../mixins/service'
+    import request from '../mixins/service'
 
     export default class personalInfo extends wepy.page {
         config = {
             navigationBarTitleText: '个人资料'
         }
         data = {
+            mobile:null,
+            date: '2012-09-01',
+            nickName: wepy.getStorageSync('userInfo').nickName,
+            avatarUrl: wepy.getStorageSync('userInfo').avatarUrl
+        }
+
+
+
+        //mixins = [testMixin]
+        methods = {
+            bindDateChange: function (e) {
+                console.log('picker发送选择改变，携带值为', e.detail.value)
+                this.date=e.detail.value
+            },
+
+
+            changeMobile:function (e) {
+                console.log(e);
+                wepy.navigateTo({url:'bindMobile'})
+            },
+
+            changeNickName:function (e) {
+                this.nickName=e.detail.value
+            },
+
+            uploadImg(){
+                const  self=this
+                wx.chooseImage({
+                    count: 1,
+                    success: function (temp) {
+                        if (temp.tempFilePaths.length) {
+                            var tempFilePaths = temp.tempFilePaths
+                            self.avatarUrl=tempFilePaths[0]
+                            self.$apply()
+                        }
+                    }
+                })
+            },
+
+
+
+
+//          const self = this
+//
+//                debugger
+//                wx.getImageInfo({
+//                  src:tempFilePaths[0],
+//                  success:function (res) {
+//                    console.log(res.width)
+//                    console.log(res.height)
+//                  }
+//                })
+//                wx.request({
+//                  url: tempFilePaths[0],
+//                  method: 'GET',
+//                  responseType: 'arraybuffer',
+//                  success: function (res) {
+//                    debugger
+//                    var base64 = wx.arrayBufferToBase64(res.data);
+//                    debugger
+//                    self.setData({
+//                      avatarUrl: 'data:image/jpg;base64,' + base64
+//                    })
+//                  }
+//                });
+//
+//                debugger
+//
+//
+//
+//
+//
+////                self.$apply()
+//
+//                //self.setData({avatarUrl: 'data:image/jpg;base64,' + base64})
+//
+//
+//              }
+//              console.log(temp);
+//            },
+//            fail:function (err) {
+//              console.log(err);
+//            }
+//          })
+//        }
+        }
+
+
+
+        getChildInfo(data){
+
+            this.weight=data.weight
+            this.height=data.height
+            this.date=data.birthday// res.data
+            this.nickName= data.nickname
+            this.index=data.sex
+            this.avatar=data.avatarurl
+            this.$apply()
+        }
+        onShow(){
+            this.date=wepy.getStorageSync('userInfo').birthday||'2000-01-01'
+            this.mobile=wepy.getStorageSync('userInfo').mobile||'17826185102'
+        }
+
+        onLoad(option){
+
+
+//            header: {
+//              'Content-Type': 'application/x-www-form-urlencoded'
+//            },
+
+
 
         }
-        mixins = [testMixin]
-
     }
 </script>
-<style lang="less" scoped>
-
-    .container{
-        background-color: #efefef;
-        justify-content: inherit;
+<style>
+    .container {
         height: 100vh;
-    }
-    .userInfo {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 100%;
-        background:linear-gradient(to bottom right,#32ECAC,#01C1D7);
-        padding:60rpx 0;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: #f3f3f3;
+    }
+    .opacity0{
+        opacity: 0;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        left: -1000px;
+        bottom: 100px;
+    }
+    .displayNone{
+        display: none;
     }
 
-    .userinfo-avatar {
-        width:160rpx;
-        height:160rpx;
-        border-radius:50%;
-        overflow:hidden;
+    .marginTop25rpx {
+        margin-top: 25 rpx;
     }
 
-    .userinfo-nickname {
-        margin-top: 30rpx;
-        color: #FFF;
-        font-size: 40rpx;
+    .list {
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding-left: 3vw;
+        min-height: 9vh;
     }
+
+    .item {
+        width: 97vw;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 3vw;
+        padding-left: 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f3f3f3;
+    }
+
+    .flex1 {
+        flex: 1
+    }
+
+    .leftTitle {
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+    }
+
+    .childrenAvatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 14vw;
+        margin-right: 2vw;
+        overflow: hidden;
+    }
+
+    .text {
+        margin-right: 5vw;
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+        text-align: right;
+    }
+
+    .placeholderClass {
+        color: #bbb;
+    }
+
+
+
+
 </style>

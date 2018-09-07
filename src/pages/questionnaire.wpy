@@ -1,0 +1,136 @@
+<template>
+    <view class="container">
+        <swiper indicator-dots="{{indicatorDots}}" class="swiper"
+                autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+            <block wx:for="{{question}}">
+                <swiper-item class="swiperItem" catchtouchmove='true'>
+                    <view>
+                        <view class="topBar">
+                            <!--<image src=""></image>-->
+                            <text class="topText">请如实填写以下信息以使我们给予爱护眼睛的建议</text>
+                        </view>
+                        <view class="list">
+                            <text>{{(index+1)+'/'+question.length+'、'+item.name}}</text>
+                            <view class="next" @tap="goNext">{{'ios下一题'}}</view>
+                        </view>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import request from '../mixins/service'
+
+    export default class questionnaire extends wepy.page {
+        data = {
+            question: [],
+            indicatorDots: false,
+            answerList:[]
+        }
+        methods = {
+            changeIndicatorDots: function (e) {
+                this.setData({
+                    indicatorDots: !this.data.indicatorDots
+                })
+            },
+            changeAutoplay: function (e) {
+                this.setData({
+                    autoplay: !this.data.autoplay
+                })
+            },
+            intervalChange: function (e) {
+                this.setData({
+                    interval: e.detail.value
+                })
+            },
+            durationChange: function (e) {
+                this.setData({
+                    duration: e.detail.value
+                })
+            },
+            goNext:function(e){
+                console.log(e);
+            }
+        }
+        onLoad(option){
+            console.log(option);
+            const self = this
+            request('getPaperList',{type:4}).then(res=> {
+                res =JSON.parse(res.data)
+                console.log(res);
+            }).catch(err=>{
+                console.log(err);
+            })
+            request('getPaperDetail',{code:'exam2'}).then(res=> {
+                //res =JSON.parse(res.data)
+                console.log(res);
+                self.question=res.data.question
+                self.$apply()
+            }).catch(err=>{
+                console.log(err);
+            })
+            request('getPaperQuestion',{question_id:19}).then(res=> {
+                //res =JSON.parse(res.data)
+                console.log(res);
+            }).catch(err=>{
+                console.log(err);
+            })
+
+        }
+    }
+</script>
+<style >
+    .swiper{
+        width: 100vw;
+        height: 100vh;
+    }
+    .swiperItem{
+        width: 100vw;
+        height: 100vh;
+        /*background-color: #f4f4f4;*/
+    }
+    .topBar{
+        height: 60rpx;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 3vw;
+        background: linear-gradient(to right, #32ECAC, #01C1D7);
+    }
+    .topText{
+        font-size: 12px;
+        color: #f8f8f8;
+        font-weight: 300;
+    }
+    .list{
+        display: flex;
+        align-items: center;
+        width: 80vw;
+        margin: 0 auto;
+        margin-top: 10vh;
+        text-align: left;
+    }
+    .title{
+        font-size: 16px;
+    }
+    .next {
+        display: inline-block;
+        width: 70vw;
+        text-align: center;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 40px;
+        /*position: absolute;*/
+        left: 15vw;
+        font-size: 16px;
+        font-weight: 300;
+        background: linear-gradient(to right, #32ECAC, #01C1D7);
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+</style>

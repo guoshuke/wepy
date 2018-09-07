@@ -3,7 +3,8 @@ import wepy from 'wepy'
 export default class testMixin extends wepy.mixin {
     data = {
         mixin: 'This is mixin data.',
-        baseUrl: 'http://glass.unimker.com/api/',
+        baseUrl: 'http://glass.unimker.com',
+        defaultChildId:wepy.getStorageSync('defaultChildId')
     }
     methods = {
         tap() {
@@ -15,15 +16,7 @@ export default class testMixin extends wepy.mixin {
 
 
     onShow() {
-        const self = this
-        wepy.getStorage({
-            key: 'userInfo', complete: function (data) {
-                if (data.data) {
-                    self.userInfo = data.data
-                    self.$apply()
-                }
-            }
-        })
+        console.log('mixin onShow')
     }
 
     onLoad() {

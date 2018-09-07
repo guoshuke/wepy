@@ -131,59 +131,6 @@
             wepy.navigateTo({url:'personalInfo'})
         }
 
-//            header: {
-//              'Content-Type': 'application/x-www-form-urlencoded'
-//            },
-
-
-//        wepy.request({
-//          url: 'http://glass.unimker.com/api/sendSms',
-//          data: {
-//            mobile: mobile
-//          },
-////            header: {
-////              'Content-Type': 'application/x-www-form-urlencoded'
-////            },
-//          method: 'POST',
-//          success: function (f) {
-//            console.log('code=========>' + f);
-//            if (f.data.code == 1) {
-//              console.log('开始计时');
-//              var time = 60
-//              var noTime = 0
-//              var s = setInterval(() => {
-//                noTime++
-//                console.log('剩余 ' + (time - noTime) + 's');
-//                if (noTime >= time) {
-//                  clearInterval(s)
-//
-//                }
-//              }, 1000)
-//            } else {
-//              this.toast(f.data.message)
-//            }
-//            //self.$parent.globalData.userInfo = f.data.data
-//          },
-//          fail: function (err) {
-//            console.log(err);
-//          }
-//        }) //
-//        wepy.request({
-//          url: 'http://glass.unimker.com/api/mobileBind',
-//          data: temp,
-////            header: {
-////              'Content-Type': 'application/x-www-form-urlencoded'
-////            },
-//          method: 'POST',
-//          success: function (f) {
-//            console.log('code=========>' + f);
-//            self.$parent.globalData.userInfo = f.data.data
-//          },
-//          fail: function (err) {
-//            console.log(err);
-//          }
-//        })
-
     }
   }
 </script>

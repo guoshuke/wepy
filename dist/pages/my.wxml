@@ -1,6 +1,6 @@
 
   <view class="container _4afdeb5">
-    <view class="userInfo _4afdeb5" bindtap="handleViewTap">
+    <view class="userInfo _4afdeb5" bindtap="goDetail">
       <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar _4afdeb5"/>
       <open-data type="userNickName" id="userName" class="userinfo-nickname _4afdeb5"/>
     </view>
@@ -11,8 +11,8 @@
       <view class="scroll _4afdeb5">
         <scroll-view scroll-x class="row _4afdeb5">
           <block class="item _4afdeb5" wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
-            <view class="item _4afdeb5">
-              <image src="{{userInfo.avatarUrl}}" class="childrenAvatar _4afdeb5"/>
+            <view class="item _4afdeb5" bindtap="addChildren" data-id="{{item.id}}">
+              <image src="{{item.avatarurl}}" class="childrenAvatar _4afdeb5"/>
               <!--<text>{{userInfo.nickName+item.name}}</text>-->
             </view>
           </block>

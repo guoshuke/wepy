@@ -1,8 +1,3 @@
-@import "./../npm/wepy-com-toast/toast.wxss";
-@import "./../components/group.wxss";
-@import "./../components/wepy-list.wxss";
-@import "./../components/counter.wxss";
-@import "./../components/panel.wxss";
 .userinfo {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,204 @@
+<style lang="less">
+    .container{
+        padding: 0 3vw;
+        border-top:1px solid #f4f4f4;
+    }
+    .list {
+        width: 94vw;
+        margin-top: 5vh;
+        overflow: hidden;
+        .item {
+            float: left;
+            width: 45vw;
+            margin-top: 1vw;
+            padding: 3vw;
+            box-sizing: border-box;
+            border-radius: 12px;
+            &:nth-child(2n){
+                margin-left: 1.5vw;
+            }
+            &:nth-child(2n+1){
+                margin-right: 1.5vw;
+            }
+            height: 13vh;
+            display: inline-block;
+            .itemTitle {
+                color: #fff;
+                font-size: 16px;
+                max-width: 24vw;
+            }
+            .itemText {
+                font-size: 14px;
+                color: #eee;
+                font-weight: 300;
+                padding-top: 12rpx;
+            }
+        }
+    }
+
+    .title {
+        font-size: 16px;
+        margin-bottom: 1vh;
+        font-weight: 400;
+    }
+    .img17{
+        background: url('http://glass.unimker.com/assets/images/photo001.png') no-repeat center center;
+        background-origin: 100%;
+        background-size: cover;
+    }
+    .img18{
+        background: url('http://glass.unimker.com/assets/images/photo002.png') no-repeat center center;
+        background-origin: 100%;
+        background-size: cover;
+    }
+    .img19{
+        background: url('http://glass.unimker.com/assets/images/photo003.png') no-repeat center center;
+        background-origin: 100%;
+        background-size: cover;
+    }
+    .img20{
+        background: url('http://glass.unimker.com/assets/images/photo004.png') no-repeat center center;
+        background-origin: 100%;
+        background-size: cover;
+    }
+    .img21{
+        background: url('http://glass.unimker.com/assets/images/photo005.png') no-repeat center center;
+        background-origin: 100%;
+        background-size: cover;
+    }
+    .img22{
+        background: url('http://glass.unimker.com/assets/images/photo006.png') no-repeat center center;
+        background-origin: 100%;
+        background-size: cover;
+    }
+</style>
+<template>
+    <view class="container">
+        <view class="list">
+            <view class="title">自我检测</view>
+            <view class="items">
+                <view class="item img17" @tap="goTest">
+                    <view class="itemTitle">视力检查</view>
+                    <view class="itemText">快速检查近视远视</view>
+                </view>
+
+                <view class="item img18">
+                    <view class="itemTitle">色盲检测</view>
+                    <view class="itemText">检查是否有色盲</view>
+                </view>
+
+                <view class="item img19">
+                    <view class="itemTitle">散光检查</view>
+                    <view class="itemText">检查是否存在散光</view>
+                </view>
+            </view>
+        </view>
+        <view class="list">
+            <view class="title">问卷调查</view>
+            <view class="items">
+                <view class="item img20" @tap="questionnaire">
+                    <view class="itemTitle">视疲劳症状问卷调查表</view>
+                </view>
+                <view class="item img21">
+                    <view class="itemTitle">学生用眼睛情况问卷调查表</view>
+                </view>
+            </view>
+        </view>
+        <view class="list">
+            <view class="title">近视控制</view>
+            <view class="items">
+                <view class="item img22">
+                    <view class="itemTitle">近视控制意义</view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import request from '../mixins/service'
+    import testMixin from '../mixins/test'
+
+
+    export default class selfSearch extends wepy.page {
+        config = {
+            navigationBarTitleText: '自查'
+        }
+        components = {}
+
+        mixins = [testMixin]
+
+        data = {}
+
+        methods = {
+            agreeGetUser(e) {
+                let self = this
+                if (e.detail.userInfo) {
+                    let self = this
+                    self.userInfo = e.detail.userInfo
+                    //http://glass.unimker.com/api/mobileBind
+                    wepy.getStorage({
+                        key: 'baseData', complete: function (data) {
+                            if (data.data) {
+                                wx.request({
+                                    url: self.baseUrl + '/api/mobileBind',
+
+                                    method: 'POST',
+//                  header: {
+//                     'content-type': 'application/x-www-form-urlencoded'
+//                     // 'content-type': 'application/json'
+//                  },
+                                    data: {
+                                        "code": '',
+                                        "code_token": '',
+                                        "user_id": 7 || data.data.user_id,
+                                        "login_token": 'd55059a4cf2b980a2145af9d3cfa661d' || data.data.login_token,
+                                        "mobile": '',
+                                        "nickname": encodeURIComponent(self.userInfo.nickName + '🐸🐸'),
+                                        "avatarurl": self.userInfo.avatarUrl,
+                                        "sex": self.userInfo.gender
+
+                                    },
+                                    success: function (d) {
+                                        console.log(d);
+                                        //self.$apply()
+                                        wepy.setStorage({key: 'userInfo', data: self.userInfo})
+                                    }
+                                })
+                            }
+                        }
+                    })
+
+
+                    console.log('授权成功======>', e.detail.userInfo); //登录授权信息
+                    self.toast('授权成功')
+                } else {
+                    console.log('授权取消');
+                    self.toast('您还未授权')
+                }
+            },
+            goTest(e){
+                wepy.navigateTo({url:'examine?id=2'})
+            },
+            questionnaire(){
+                wepy.navigateTo({url:'questionnaire?id=2'})
+            }
+        }
+
+
+        onShow(){
+
+        }
+        onLoad() {
+            if(!wx.getStorageSync('defaultChildId')){
+                wepy.navigateTo({url:'addChildren'})
+            }
+            request('getTypelist').then(res=>{
+                console.log(res);
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+    }
+</script>

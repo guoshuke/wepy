@@ -1,9 +1,6 @@
 <template>
     <view class="container">
-        <view class="userInfo">
-            <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
-            <open-data type="userNickName" id="userName" class="userinfo-nickname"></open-data>
-        </view>
+        <web-view src="https://mp.weixin.qq.com/mp/homepage?__biz=MzU1MDE4Mzc5Mw==&hid=1&sn=9c1a38d4add043a3cf9d85fa0a40e98e&scene=18#wechat_redirect"></web-view>
     </view>
 </template>
 <script>
