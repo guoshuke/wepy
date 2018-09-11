@@ -30,7 +30,7 @@
       </view>
     </view>
     <view class="last">
-      <view class="lastItem" @tap="goHeightOrWeight">
+      <view class="lastItem" @tap="goExamination"><!--goHeightOrWeight-->
         <text class="about">版本信息</text>
         <text class="version">V1.0</text>
       </view>
@@ -91,6 +91,12 @@
       goHeightOrWeight(){
           const self = this;
           wepy.navigateTo({url:'heightOrWeight?id='+self.data.id});//id 孩子id
+      }
+
+      //跳转到 视疲劳症状自查
+      goExamination(){
+          const self = this;
+          wepy.navigateTo({url:'examination?id='+self.data.id});//id 孩子id
       }
 
     toast(title, icon, cb) {

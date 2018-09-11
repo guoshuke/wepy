@@ -47,7 +47,8 @@
                 'pages/personalInfo',
                 'pages/bindMobile',
                 'pages/examine',
-                'pages/questionnaire'
+                'pages/questionnaire',
+                'pages/examination'
             ],
             window: {
                 backgroundTextStyle: 'light',
