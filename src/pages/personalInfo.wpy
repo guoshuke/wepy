@@ -35,11 +35,12 @@
                 </div>
             </div>
         </div>
-
+        <canvas canvas-id='myCanvas' class="opacity0"></canvas>
     </div>
 </template>
 <script>
     import wepy from 'wepy'
+    import upng from 'upng-js'
     import request from '../mixins/service'
 
     export default class personalInfo extends wepy.page {
@@ -49,8 +50,8 @@
         data = {
             mobile:null,
             date: '2012-09-01',
-            nickName: wepy.getStorageSync('userInfo').nickName,
-            avatarUrl: wepy.getStorageSync('userInfo').avatarUrl
+            nickName: '',
+            avatarUrl: ''
         }
 
 
@@ -60,6 +61,26 @@
             bindDateChange: function (e) {
                 console.log('picker发送选择改变，携带值为', e.detail.value)
                 this.date=e.detail.value
+                 request('setBirthday',{birthday:this.date}).then(res=>{
+                     console.log(res);
+                     if(res.code==1){
+                         wepy.getStorage({
+                             key: 'userInfo', complete: function (res) {
+                                 if (res.data) {
+                                     res.data.avatarUrl=e.detail.value
+
+                                     console.log(res.data);
+                                     wepy.setStorage({key: 'userInfo', data: res.data,success:function () {
+                                         debugger
+                                     }})
+                                 }
+                             }
+                         })
+                     }
+                 }).catch(err=>{
+                     console.log(err);
+                     wx.showToast({title: '发生错误',icon:'none'})
+                 })
             },
 
 
@@ -70,68 +91,100 @@
 
             changeNickName:function (e) {
                 this.nickName=e.detail.value
+                request('setNickName',{nickName:this.nickName}).then(res=>{
+                    console.log(res);
+                }).catch(err=>{
+                    console.log(err);
+                    wx.showToast({title: '发生错误',icon:'none'})
+                })
             },
 
-            uploadImg(){
-                const  self=this
+            uploadImg: function () {
+                const self = this
+
                 wx.chooseImage({
-                    count: 1,
-                    success: function (temp) {
-                        if (temp.tempFilePaths.length) {
-                            var tempFilePaths = temp.tempFilePaths
-                            self.avatarUrl=tempFilePaths[0]
-                            self.$apply()
-                        }
+                    success: res => {
+                        //生成的图片临时路径画成canvas
+                        const ctx = wx.createCanvasContext('myCanvas')
+                        const platform = wx.getSystemInfoSync().platform
+                        const imgWidth = 60, imgHeight = 60;
+                        ctx.drawImage(res.tempFilePaths[0], 0, 0, imgWidth, imgHeight)
+                        ctx.draw(false, () => {
+                            wx.canvasGetImageData({
+                                canvasId: 'myCanvas',
+                                x: 0,
+                                y: 0,
+                                width: imgWidth,
+                                height: imgHeight,
+                                success: res => {
+
+                                    if (platform === 'ios') {
+                                        // 兼容处理：ios获取的图片上下颠倒
+
+                                        res = self.reverseImgData(res)
+                                    }
+
+                                    // 3. png编码
+                                    let pngData = upng.encode([res.data.buffer], res.width, res.height)
+                                    // 4. base64编码
+
+                                    let base64 = wx.arrayBufferToBase64(pngData)
+
+
+                                    self.avatarUrl = 'data:image/jpeg;base64,' + base64
+                                    self.$apply()
+                                    self.upImg(self.avatarUrl)
+
+                                },
+                                fail(res) {
+
+                                    console.log(res)
+                                },
+                            })
+                        })
                     }
                 })
             },
 
+        }
+        upImg(data){
+            request('setAvatar',{avatarUrl:data}).then(res=>{
+                console.log(res);
+                if(res.code!=1){
+                    wx.showToast({title: res.message,icon:'none'})
+                }else {
+                    wx.showToast({title: res.message})
+                    wepy.getStorage({
+                        key: 'userInfo', complete: function (res) {
+                            if (res.data) {
+                                res.data.avatarUrl=data
 
+                                console.log(res.data);
+                                wepy.setStorage({key: 'userInfo', data: res.data,success:function () {
+                                }})
+                            }
+                        }
+                    })
 
+                }
+            }).catch(err=>{
+                wx.showToast({title: '发生错误',icon:'none'})
+                console.log(err);
+            })
+        }
 
-//          const self = this
-//
-//                debugger
-//                wx.getImageInfo({
-//                  src:tempFilePaths[0],
-//                  success:function (res) {
-//                    console.log(res.width)
-//                    console.log(res.height)
-//                  }
-//                })
-//                wx.request({
-//                  url: tempFilePaths[0],
-//                  method: 'GET',
-//                  responseType: 'arraybuffer',
-//                  success: function (res) {
-//                    debugger
-//                    var base64 = wx.arrayBufferToBase64(res.data);
-//                    debugger
-//                    self.setData({
-//                      avatarUrl: 'data:image/jpg;base64,' + base64
-//                    })
-//                  }
-//                });
-//
-//                debugger
-//
-//
-//
-//
-//
-////                self.$apply()
-//
-//                //self.setData({avatarUrl: 'data:image/jpg;base64,' + base64})
-//
-//
-//              }
-//              console.log(temp);
-//            },
-//            fail:function (err) {
-//              console.log(err);
-//            }
-//          })
-//        }
+        reverseImgData(res) {
+            var w = res.width
+            var h = res.height
+            let con = 0
+            for (var i = 0; i < h / 2; i++) {
+                for (var j = 0; j < w * 4; j++) {
+                    con = res.data[i * w * 4 + j]
+                    res.data[i * w * 4 + j] = res.data[(h - i - 1) * w * 4 + j]
+                    res.data[(h - i - 1) * w * 4 + j] = con
+                }
+            }
+            return res
         }
 
 
@@ -147,12 +200,18 @@
             this.$apply()
         }
         onShow(){
+            this.getInfo()
+        }
+        getInfo(){
             this.date=wepy.getStorageSync('userInfo').birthday||'2000-01-01'
-            this.mobile=wepy.getStorageSync('userInfo').mobile||'17826185102'
+            this.mobile=wepy.getStorageSync('userInfo').mobile||'请关联手机号'
+            this.nickName= wepy.getStorageSync('userInfo').nickName||null
+            this.avatarUrl= wepy.getStorageSync('userInfo').avatarUrl||null
+
         }
 
         onLoad(option){
-
+                this.getInfo()
 
 //            header: {
 //              'Content-Type': 'application/x-www-form-urlencoded'
@@ -237,6 +296,14 @@
 
     .placeholderClass {
         color: #bbb;
+    }
+    .opacity0 {
+        opacity: 0;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        left: -1000px;
+        bottom: 100px;
     }
 
 

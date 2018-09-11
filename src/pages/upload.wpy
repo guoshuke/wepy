@@ -1,0 +1,308 @@
+<template>
+    <view class="container">
+        <view class="content">
+            <div class="list">
+                <div class="item">
+                    <span class="leftTitle">检查日期</span>
+                    <picker mode="date" value="{{date}}" start="1990-09-30" end="2018-10-01" class="flex1"
+                            bindchange="bindDateChange">
+                        <view class="text">
+                            {{date}}
+                        </view>
+                    </picker>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item bbNone">
+                    <span class="leftTitle">上传图片</span>
+                    <scroll-view scroll-x class="row">
+                        <block wx:for='{{imgList}}'>
+                            <div class="items" data-index="{{item.id}}" @tap="goArchives">
+                                <image src='{{item.avatarUrl}}' class="childrenAvatar"/>
+                            </div>
+                        </block>
+                        <view wx:if="{{imgList.length<6}}" class="items" @tap="uploadImg">
+                            <view class="addImg">
+                                <view class="addImgAdd">+</view>
+                                <view class="addImgText">添加照片</view>
+                            </view>
+                        </view>
+                    </scroll-view>
+                </div>
+            </div>
+            <div class="explain">
+                <div class="title">视力检查记录说明：</div>
+                <div class="explainText">
+                    请您上传就诊后所有关于眼睛的检查结果，包括每次就诊病例中的视力、验光度数、视功能检查及眼轴等生物学测量结果。
+                    我们将为您录入形成完整等视力档案，以便您数据的保存和查阅，最重要的是医生可以根据以上结果提供个性化的近视诊疗方案，
+                    达到预防近视发生和度数加深。
+                </div>
+            </div>
+        </view>
+        <canvas canvas-id='myCanvas' class="opacity0"></canvas>
+        <div class="last">
+            <div class="add" @tap="addHeightOrWeight">确认添加</div>
+        </div>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import upng from 'upng-js'
+    import request from '../mixins/service'
+
+    export default class upload extends wepy.page {
+
+        config = {
+            navigationBarTitleText: "添加检查记录"
+        }
+
+        data = {
+            id:'',
+            date: '1990-09-30',
+            imgList:[],
+            store_id:wepy.getStorageSync('storeId')?wepy.getStorageSync('storeId').storeId:'',
+            index:0
+        }
+
+        reverseImgData(res) {
+            var w = res.width
+            var h = res.height
+            let con = 0
+            for (var i = 0; i < h / 2; i++) {
+                for (var j = 0; j < w * 4; j++) {
+                    con = res.data[i * w * 4 + j]
+                    res.data[i * w * 4 + j] = res.data[(h - i - 1) * w * 4 + j]
+                    res.data[(h - i - 1) * w * 4 + j] = con
+                }
+            }
+            return res
+        }
+
+        methods = {
+            //日期
+            bindDateChange: function (e) {
+                console.log('picker发送选择改变，携带值为', e.detail.value)
+                this.date=e.detail.value
+            },
+            //身高
+            changeHeight:function (e) {
+                this.height=e.detail.value
+
+            },
+            //添加
+            addHeightOrWeight(){
+                const sendData={
+                    child_id:this.data
+                }
+                request('addHealthRecordBody')
+            },
+            uploadImg: function () {
+                const self = this
+
+                wx.chooseImage({
+                    success: res => {
+                        //生成的图片临时路径画成canvas
+                        const ctx = wx.createCanvasContext('myCanvas')
+                        const platform = wx.getSystemInfoSync().platform
+                        const imgWidth = 60, imgHeight = 60;
+                        ctx.drawImage(res.tempFilePaths[0], 0, 0, imgWidth, imgHeight)
+                        ctx.draw(false, () => {
+                            wx.canvasGetImageData({
+                                canvasId: 'myCanvas',
+                                x: 0,
+                                y: 0,
+                                width: imgWidth,
+                                height: imgHeight,
+                                success: res => {
+
+                                    if (platform === 'ios') {
+                                        // 兼容处理：ios获取的图片上下颠倒
+
+                                        res = self.reverseImgData(res)
+                                    }
+
+                                    // 3. png编码
+                                    let pngData = upng.encode([res.data.buffer], res.width, res.height)
+                                    // 4. base64编码
+
+                                    let base64 = wx.arrayBufferToBase64(pngData)
+
+                                    //console.log('data:image/jpeg;base64,' + base64)
+                                   // let newBase64 = 'data:image/jpeg;base64,' + base64
+//                                    self.setData({
+//                                        avatarUrl: 'data:image/jpeg;base64,' + base64
+//                                    });
+                                    //self.avatarUrl = 'data:image/jpeg;base64,' + base64
+                                    self.index=self.data.index+1
+                                    self.imgList.push({id:self.index,avatarUrl:'data:image/jpeg;base64,' + base64})
+                                    self.$apply()
+
+                                },
+                                fail(res) {
+                                    wx.showToast({title: '我执行了3'})
+
+                                    console.log(res)
+                                },
+                            })
+                        })
+                    }
+                })
+            },
+        }
+
+        onLoad(option) {
+            this.id=option.id
+        }
+
+    }
+</script>
+<style>
+    .marginR3{
+        margin-right:3vw;
+    }
+    .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: #f3f3f3;
+    }
+    .list {
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding-left: 3vw;
+        min-height: 9vh;
+    }
+    .flex1 {
+        flex: 1
+    }
+    .item {
+        width: 97vw;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 3vw;
+        padding-left: 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f3f3f3;
+    }
+    .row {
+        width: 100vw;
+        white-space: nowrap;
+        margin: 40rpx 0;
+        padding-right:4vw;
+        box-sizing: border-box;
+    }
+
+    .items {
+        width: 25vw;
+        margin: 0 3vw;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .bbNone{
+        border-bottom: none;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .leftTitle {
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+    }
+    .text {
+        margin-right: 5vw;
+        font-size: 13px;
+        font-weight: 400;
+        color: #666;
+        text-align: right;
+    }
+
+    .placeholderClass {
+        color: #bbb;
+    }
+
+    .last{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .add {
+        display: inline-block;
+        width: 70vw;
+        text-align: center;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 40px;
+        /*position: absolute;*/
+        left: 15vw;
+        font-size: 16px;
+        font-weight: 300;
+        background: linear-gradient(to right, #32ECAC, #01C1D7);
+        color: #fff;
+        margin-top:20px;
+        margin-bottom:20px;
+    }
+    .childrenAvatar {
+        width: 100%;
+        height: 25vw;
+        /*border-radius: 50%;*/
+    }
+
+    .addImg {
+        width: 100%;
+        height: 25vw;
+        border: 1px dashed #ccc;
+    }
+    .addImgAdd{
+        font-size: 60px;
+        font-weight: 100;
+        text-align: center;
+        color: #999;
+        line-height: 130rpx;
+     }
+    .addImgText{
+        font-size: 14px;
+        font-weight: 300;
+        text-align: center;
+        color: #999;
+    }
+    .explain{
+        /*padding-left:4vw;*/
+        box-sizing: border-box;
+        width: 100vw;
+        display:flex;
+        flex-direction:column;
+        padding:0 4vw;
+
+    }
+    .title{
+        line-height: 60rpx;
+        display: flex;
+        font-size: 15px;
+        color: #999;
+        font-weight: 300;
+        margin-top: 20rpx;
+    }
+    .explainText{
+        font-size: 14px;
+        color: #999;
+        font-weight: 300;
+        line-height: 38rpx;
+    }
+    .opacity0{
+        opacity: 0;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        left: -1000px;
+        bottom: 100px;
+    }
+
+</style>

@@ -134,7 +134,7 @@
                         wepy.showToast({title: res.message})
                         debugger
                         if (!self.data.childrenId) {
-                            wepy.setStorage({key: 'defaultChildId', data: {id: res.data.id}})
+                            wepy.setStorage({key: 'defaultChildId', data: {id: res.data.id,nickname:res.data.nickname}})
                         }
 
                         setTimeout(function () {
@@ -169,7 +169,7 @@
                                     wepy.showToast({title: res.message})
                                     setTimeout(function () {
                                         wepy.navigateBack({
-                                            delta: 2
+                                            delta: 1
                                         })
                                     }, 1500)
 

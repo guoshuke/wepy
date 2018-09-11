@@ -1,0 +1,321 @@
+<template>
+    <view class="container">
+        <div class="top">
+            <view class="leftImg">
+                <image class="img" src="{{avatarUrl}}"/>
+            </view>
+            <div class="rightContent">
+                <div class="nickNameBar">
+                    <text class="nickName">{{nickName}}</text>
+                    <text class="edit" @tap="goAddChildren">编辑</text>
+                </div>
+                <div class="info">
+                    <span class="title">性别：</span>
+                    <span class="value">{{sexName}}</span>
+                </div>
+                <div class="info">
+                    <span class="title">年龄：</span>
+                    <span class="value">{{year}}</span>
+                </div>
+                <div class="info">
+                    <span class="title">身高：</span>
+                    <span class="value">{{height}}</span>
+                </div>
+                <div class="info">
+                    <span class="title">体重：</span>
+                    <span class="value">{{width}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="list mt3">
+            <div class="item" @tap="goHeightOrWeight">
+                <span class="leftTitle flex1">身高体重记录</span>
+                <span class="iconfont icon-left"></span>
+            </div>
+        </div>
+        <div class="list">
+            <div class="item">
+                <span class="leftTitle flex1">视力统计</span>
+                <span class="iconfont icon-left"></span>
+            </div>
+        </div>
+        <div class="checkRecord mt3">
+            <div class="recordTitle">
+                <span class="leftTitle flex1">检查记录</span>
+                <span class="upload" @tap="goUpload">上传</span>
+            </div>
+        </div>
+        <div class="checkData">
+            <div class="items">
+                <div class="dataTitle"><image class="iconLeft" src="../asset/24.png"/> <div class="dataTitleName">2018-09-01 吴江人民医院</div></div>
+                <scroll-view class="imgs">
+                    <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                    <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                </scroll-view>
+            </div>
+            <div class="items">
+                <div class="dataTitle"><image class="iconLeft" src="../asset/24.png"/> <div class="dataTitleName">2018-09-01 吴江人民医院</div></div>
+                <!--<view class="scroll">-->
+                    <!--<scroll-view scroll-x class="row">-->
+                        <!--<block wx:for='{{list}}'>-->
+                            <!--<div class="item" data-index="{{item.id}}" @tap="goArchives">-->
+                                <!--<image src='{{item.avatarurl}}' class="childrenAvatar"/>-->
+                                <!--<view class="nickname">{{item.nickname}}</view>-->
+                            <!--</div>-->
+                        <!--</block>-->
+                        <!--<view class="item" @tap="addChildren">-->
+                            <!--<view class="add">+</view>-->
+                        <!--</view>-->
+                    <!--</scroll-view>-->
+                <!--</view>-->
+
+
+                    <scroll-view scroll-x class="imgs">
+                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
+                    </scroll-view>
+
+            </div>
+        </div>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import mixin from '../mixins/test'
+    import request from '../mixins/service'
+
+    export default class archives extends wepy.page {
+        config = {
+            navigationBarTitleText: '健康档案'
+        }
+        data = {
+            id:'',
+            weight:'',
+            height:'',
+            year:'',
+            sexName:'',
+            nickName:'',
+            avatarUrl:'',
+            list:[{
+                "id": 1,
+                "child_id": 1,
+                "user_id": 0,
+                "check_time": "2018-01-01",
+                "check_place": "aaaaaaaaaaaaaa",
+                "image": "../asset/6.png",
+                "sort": 1,
+                "updated_at": null
+            }, {
+                "id": 2,
+                "child_id": 1,
+                "user_id": 0,
+                "check_time": "2018-01-01",
+                "check_place": "bbbbbbbbbbbbb",
+                "image": "../asset/6.png",
+                "sort": 1,
+                "updated_at": null
+            }]
+        }
+        methods = {
+            goAddChildren:function (e) {
+                wepy.navigateTo({url: 'addChildren?id='+this.data.id})
+            },
+            goHeightOrWeight() {
+                wepy.navigateTo({url: 'heightOrWeight?id=' + this.data.id});//id 孩子id
+            },
+            goUpload:function () {
+                wepy.navigateTo({url: 'upload?id='+this.data.id})
+            }
+        }
+        mixins = [mixin]
+        getChildInfo(data) {
+            this.weight = data.weight
+            this.height = data.height
+            this.year = new Date().getFullYear()-new Date(data.birthday).getFullYear()
+            this.nickName = data.nickname
+            this.sexName = data.sexname
+            this.avatarUrl = this.baseUrl + data.avatarurl
+            this.$apply()
+        }
+        onLoad(option){
+            console.log(option);
+            const self = this
+            if(option.id){
+                self.id=option.id
+                request('getChildInfo', {id: option.id}).then(res => {
+                    console.log(res.data);
+                    self.getChildInfo(res.data)
+                }).catch(err => {
+
+                })
+            }else {
+                //未关联任何孩子
+                wepy.navigateTo({url:'addChildren'})
+            }
+
+        }
+    }
+</script>
+<style>
+    .container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /*justify-content: space-between;*/
+        box-sizing: border-box;
+        background-color: #f4f4f4;
+    }
+    .top{
+        display: flex;
+        width: 100vw;
+        margin-top: 5vw;
+        padding: 4vw;
+        background-color: #fff;
+        box-sizing:border-box;
+    }
+    .mt3{
+        margin-top: 3vh;
+    }
+    .leftImg{
+        display: inline-block;
+        float: left;
+        width: 150rpx;
+        height: 150rpx;
+        border-radius: 150rpx;
+        overflow: hidden;
+    }
+    .img{
+        width: 100%;
+        height: 100%;
+    }
+    .rightContent{
+        flex: 1;
+        flex-wrap:wrap;
+        margin-left: 4vw;
+    }
+    .nickNameBar{
+        display: flex;
+        flex: 1;
+        align-items:center;
+    }
+    .edit{
+        margin-left:5vw;
+        font-size:14px;
+        color:#007aff;
+
+    }
+    .info{
+        display: inline-block;
+        width: 50%;
+        font-size: 14px;
+        font-weight: 300;
+        color: #444;
+    }
+    .title{
+        margin-bottom: 7vh;
+    }
+    .list {
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding-left: 3vw;
+        min-height: 9vh;
+    }
+
+    .item {
+        width: 97vw;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 3vw;
+        padding-left: 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f3f3f3;
+    }
+
+    .flex1 {
+        flex: 1
+    }
+
+    .leftTitle {
+        font-size: 15px;
+        font-weight: 400;
+        color: #666;
+    }
+    .checkRecord{
+        display: flex;
+        align-items: center;
+        width: 100vw;
+        padding: 4vw;
+        box-sizing: border-box;
+        background-color: #fff;
+    }
+    .recordTitle{
+        display: flex;
+        width: 100%;
+    }
+    .upload{
+        padding:6rpx 18rpx;
+        border-radius: 20rpx;
+        font-size: 14px;
+        color: #fff;
+        font-weight: 300;
+        background: linear-gradient(to right, #32ECAC, #01C1D7);
+    }
+    .checkData{
+        padding: 4vw;
+        display: flex;
+        flex-direction:column;
+        width: 100vw;
+        box-sizing: border-box;
+        background-color: #fff;
+        padding-left:6vw;
+    }
+    .items{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        position: relative;
+        border-left: 1px dashed #c9caca;
+    }
+    .items:last-child{
+        border-left:none;
+    }
+    .dataTitle{
+        display: flex;
+    }
+    .iconLeft{
+        width: 38rpx;
+        height: 38rpx;
+        position: absolute;
+        left:-17rpx;
+        top:1rpx;
+    }
+    .dataTitleName{
+        font-size: 18px;
+        font-weight: 400;
+        color: #c9caca;
+        margin-left: 8vw;
+    }
+    .imgs{
+        width:100%;
+        flex-wrap:nowrap;
+        padding-left:8vw;
+        white-space:nowrap;
+        overflow:scroll;
+
+    }
+    .dataImg{
+        display: inline-block;
+        width: 200rpx;
+        height: 200rpx;
+        padding: 60rpx 20rpx 60rpx 0;
+    }
+
+</style>

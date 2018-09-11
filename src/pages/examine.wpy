@@ -1,6 +1,6 @@
 <template>
     <view class="container">
-        {{temp}}
+        <image wx:if="{{JSON.stringify(temp)!='{}'}}" class="img" bindload="imageLoad"  src="{{temp.image?baseUrl+temp.image:null}}" style="width:{{ images.width }}px; height:{{ images.height }}px;"/>
    </view>
 </template>
 <script>
@@ -10,21 +10,42 @@
 
     export default class examine extends wepy.page {
         config = {
-            navigationBarTitleText: '资讯'
+            navigationBarTitleText: '检测'
         }
         data = {
-            temp:''
+            temp:{},
+            images:{}
         }
         mixins = [testMixin]
         onLoad(option){
             const self =this
             request('getSysData',{type:option.id}).then(res=>{
                 console.log(res);
-                self.temp=res.data[1].content
+                self.temp=res.data[0]
+                self.config.navigationBarTitleText=self.temp.title
                 self.$apply()
             }).catch(err=>{
                 console.log(err);
             })
+        }
+        methods={
+            imageLoad(e){
+                debugger
+                var $width=e.detail.width,    //获取图片真实宽度
+                    $height=e.detail.height,
+                    ratio=$width/$height;    //图片的真实宽高比例
+                var viewWidth=wx.getSystemInfoSync().windowWidth,           //设置图片显示宽度，左右留有16rpx边距
+                    viewHeight=wx.getSystemInfoSync().windowWidth/ratio;    //计算的高度值
+                var image=this.data.images;
+                //将图片的datadata-index作为image对象的key,然后存储图片的宽高值
+                image={
+                    width:viewWidth,
+                    height:viewHeight
+                }
+                this.images=image
+                this.$apply()
+
+            }
         }
 
     }
@@ -35,5 +56,8 @@
         background-color: #efefef;
         justify-content: inherit;
         height: 100vh;
+    }
+    .img{
+        width: 100vw;
     }
 </style>

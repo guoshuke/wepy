@@ -5,7 +5,6 @@ let request =function (url,data,type){
     var baseData = wepy.getStorageSync('baseData')
     return new Promise(function(resolve,reject){
         //网络请求
-
         wx.request({
             url: baseUrl+url,
             data: Object.assign(data||{},baseData),

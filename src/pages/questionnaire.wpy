@@ -1,8 +1,7 @@
 <template>
     <view class="container">
-        <swiper indicator-dots="{{indicatorDots}}" class="swiper"
-                autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-            <block wx:for="{{question}}">
+        <swiper class="swiper" current="{{currentTab}}">
+            <block wx:for="{{question}}" >
                 <swiper-item class="swiperItem" catchtouchmove='true'>
                     <view>
                         <view class="topBar">
@@ -10,8 +9,16 @@
                             <text class="topText">请如实填写以下信息以使我们给予爱护眼睛的建议</text>
                         </view>
                         <view class="list">
-                            <text>{{(index+1)+'/'+question.length+'、'+item.name}}</text>
-                            <view class="next" @tap="goNext">{{'ios下一题'}}</view>
+                            <text class="title">{{(index+1)+'/'+question.length+'、'+item.name}}</text>
+                            <block wx:for="{{answerList}}">
+                                <view class="selectItem" @tap="selectOption" data-num="{{item.score}}">
+                                    <image class="selectImg" src="{{index===selectIndex?'../asset/5.png':'../asset/4.png'}}"/>
+                                    {{item.name}}
+                                </view>
+                            </block>
+                            <view wx:if="{{index!=question.length-1}}" data-index="{{index}}" data-id="{{item.id}}" class="next" @tap="goNext">下一题</view>
+                            <view wx:if="{{index==question.length-1}}" data-index="{{index}}" class="next" @tap="goNext">提交</view>
+                            <view wx:if="{{selectIndex!==null}}" class="suggest">建议：请爱护眼镜，经常做眼睛保健操</view>
                         </view>
                     </view>
                 </swiper-item>
@@ -24,60 +31,101 @@
     import request from '../mixins/service'
 
     export default class questionnaire extends wepy.page {
+        config = {
+            navigationBarTitleText: '问卷调查表'
+        }
         data = {
-            question: [],
-            indicatorDots: false,
-            answerList:[]
+            code:null,
+            question: [],//全部的问题
+            answerList:[],//问题答案
+            currentTab:null,//调查表索引
+            selectIndex:null,//选中状态 第几个答案被选中了
+            needSum:false,
+            sum:0,//得分总和
+            sendData:{
+                "child_id": wx.getStorageSync('defaultChildId').id,
+                "paper_code": null,
+                "question": []
+            }
+
         }
         methods = {
-            changeIndicatorDots: function (e) {
-                this.setData({
-                    indicatorDots: !this.data.indicatorDots
-                })
-            },
-            changeAutoplay: function (e) {
-                this.setData({
-                    autoplay: !this.data.autoplay
-                })
-            },
-            intervalChange: function (e) {
-                this.setData({
-                    interval: e.detail.value
-                })
-            },
-            durationChange: function (e) {
-                this.setData({
-                    duration: e.detail.value
-                })
-            },
             goNext:function(e){
+                if(this.data.selectIndex === null){
+                    wepy.showToast({title: '请选择一个答案', icon: 'none'})
+                    return
+                }
+                if(e.target.dataset.index+1!=this.data.question.length){
+                    //this.setData({currentTab:this.data.currentTab+1})
+                    this.sum=this.data.sum+this.data.selectIndex
+                    this.sendData.question.push({
+                        "id": e.target.dataset.id,
+                        "answer": this.data.selectIndex
+                    })
+                    this.selectIndex=null
+                    this.currentTab=this.data.currentTab+1
+
+                    this.getAnswerList(this.data.question[this.currentTab].id)
+                    this.$apply()
+                    console.log(this.data.sum);
+                }else {
+                    request('setAnswer',this.data.sendData).then(res=>{
+                        console.log(res);
+                        if(res.code==1){
+                            wepy.showToast({title: '提交成功'})
+                            setTimeout(function () {
+                                wepy.navigateBack({
+                                    delta: 1
+                                })
+                            },1500)
+                        }
+                    }).catch(err=>{
+                        console.log(err)
+                    })
+                }
+            },
+            selectOption:function (e) {
                 console.log(e);
+                this.selectIndex = e.currentTarget.dataset.num-0
+                this.isSelect=true
+                this.$apply()
             }
         }
         onLoad(option){
             console.log(option);
             const self = this
-            request('getPaperList',{type:4}).then(res=> {
-                res =JSON.parse(res.data)
-                console.log(res);
-            }).catch(err=>{
-                console.log(err);
-            })
-            request('getPaperDetail',{code:'exam2'}).then(res=> {
+            this.needSum=!!option.needSum
+//            request('getPaperList').then(res=> {
+//                res =JSON.parse(res.data)
+//                console.log(res);
+//            }).catch(err=>{
+//                console.log(err);
+//            })
+            self.code=self.sendData.paper_code=option.code
+            request('getPaperDetail',{code:option.code}).then(res=> {
                 //res =JSON.parse(res.data)
                 console.log(res);
                 self.question=res.data.question
+                this.config.navigationBarTitleText=res.data.title
+                wx.setNavigationBarTitle({
+                    title: res.data.title//页面标题为路由参数
+                })
+                this.getAnswerList(self.question[0].id)
+
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+        getAnswerList(id){
+            const self = this
+            request('getPaperQuestion',{question_id:id}).then(res=> {
+                //res =JSON.parse(res.data)
+                console.log(res);
+                self.answerList=res.data
                 self.$apply()
             }).catch(err=>{
                 console.log(err);
             })
-            request('getPaperQuestion',{question_id:19}).then(res=> {
-                //res =JSON.parse(res.data)
-                console.log(res);
-            }).catch(err=>{
-                console.log(err);
-            })
-
         }
     }
 </script>
@@ -107,20 +155,22 @@
     }
     .list{
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-items: center;
         width: 80vw;
         margin: 0 auto;
-        margin-top: 10vh;
+        margin-top: 9vh;
         text-align: left;
     }
     .title{
-        font-size: 16px;
+        font-size: 18px;
+        margin-bottom: 7vh;
     }
     .next {
         display: inline-block;
         width: 70vw;
         text-align: center;
-        margin: 0 auto;
+        margin: 7vh auto 20px auto;
         height: 40px;
         line-height: 40px;
         border-radius: 40px;
@@ -130,7 +180,25 @@
         font-weight: 300;
         background: linear-gradient(to right, #32ECAC, #01C1D7);
         color: #fff;
-        margin-bottom: 20px;
+
+    }
+    .selectItem{
+        text-align: left;
+        /*padding-left:100rpx;*/
+        color: #777;
+        font-size: 16px;
+        padding-bottom: 40rpx;
+        display: flex;
+    }
+    .selectImg{
+        width: 38rpx;
+        height: 38rpx;
+        margin-right: 30rpx;
+    }
+    .suggest{
+        color:#FF8384;
+        font-size: 16px;
+        font-weight: 300;
     }
 
 </style>

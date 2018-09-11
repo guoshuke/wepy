@@ -1,250 +1,279 @@
 <template>
-  <view class="container">
-    <view class="userInfo" @tap="goDetail">
-      <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
-      <open-data type="userNickName" id="userName" class="userinfo-nickname"></open-data>
-    </view>
-    <view class="myChildren">
-      <view class="myChildrenTitle padding3">
-        我的孩子
-      </view>
-      <view class="scroll">
-        <scroll-view scroll-x class="row">
-          <repeat for='{{list}}' index="index" item="item" key="key" class="item">
-            <view class="item" bindtap="addChildren" data-id="{{item.id}}">
-              <image src='{{item.avatarurl}}' class="childrenAvatar"/>
-              <!--<text>{{userInfo.nickName+item.name}}</text>-->
+    <view class="container">
+        <button class="userInfo" bindgetuserinfo="goDetail" open-type="getUserInfo">
+            <open-data wx:if="{{!userInfo.avatarUrl}}" type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
+            <open-data wx:if="{{!userInfo.nickName}}" type="userNickName" id="userName" class="userinfo-nickname"></open-data>
+            <image wx:if="{{userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="userinfo-avatar"></image>
+            <view wx:if="{{userInfo.nickName}}" class="userinfo-nickname mt0">{{userInfo.nickName}}</view>
+        </button>
+        <view class="myChildren">
+            <view class="myChildrenTitle padding3">
+                我的孩子
             </view>
-          </repeat>
-          <view class="item" @tap="addChildren">
-            <view class="add">+</view>
-          </view>
-        </scroll-view>
-      </view>
-      <toast/>
+            <view class="scroll">
+                <scroll-view scroll-x class="row">
+                    <block wx:for='{{list}}'>
+                        <div class="item" data-index="{{item.id}}" @tap="goArchives">
+                            <image src='{{item.avatarurl}}' class="childrenAvatar"/>
+                            <view class="nickname">{{item.nickname}}</view>
+                        </div>
+                    </block>
+                    <view class="item" @tap="addChildren">
+                        <view class="add">+</view>
+                    </view>
+                </scroll-view>
+            </view>
+            <toast/>
+        </view>
+        <view class="last">
+            <view class="lastItem" @tap="goAboutUs">
+                <text class="about">关于我们</text>
+                <text class="iconfont icon-left"></text>
+            </view>
+        </view>
+        <view class="last">
+            <view class="lastItem">
+                <text class="about">版本信息</text>
+                <text class="version">V1.0</text>
+            </view>
+        </view>
     </view>
-    <view class="last">
-      <view class="lastItem" @tap="getChildrenList">
-        <text class="about">关于我们</text>
-        <text class="iconfont icon-left"></text>
-      </view>
-    </view>
-    <view class="last">
-      <view class="lastItem" @tap="goHeightOrWeight">
-        <text class="about">版本信息</text>
-        <text class="version">V1.0</text>
-      </view>
-    </view>
-  </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  import Toast from 'wepy-com-toast'
-  import testMixin from '../mixins/test'
-  import request   from '../mixins/service'
+    import wepy from 'wepy'
+    import Toast from 'wepy-com-toast'
+    import testMixin from '../mixins/test'
+    import request from '../mixins/service'
 
-  export default class my extends wepy.page {
-    config = {
-      navigationBarTitleText: '个人中心'
-    }
-    data = {
-      list: [],
-      userInfo: {
-        nickName: '',
-        avatarUrl: ''
-      },
-      id:'',
-    }
-    mixins = [testMixin]
-
-    components = {
-      toast: Toast
-    }
-
-    getUserInfo(){
-      let self=this
-      wepy.getStorage({key:'userInfo',complete:function (data) {
-        if(data.data){
-          self.userInfo=data.data
+    export default class my extends wepy.page {
+        config = {
+            navigationBarTitleText: '个人中心'
         }
-      }})
-    }
+        data = {
+            list: [],
+            userInfo: {
+                nickName: '',
+                avatarUrl: ''
+            },
+            id: '',
+        }
+        mixins = [testMixin]
 
-      getChildrenList() {
-          const self = this
-          request(
-              'getChildrenList',
-          ).then(res =>{
-              console.log( res);
-              self.data.list=self.list=res.data
-              self.data.id = res.data[0]['id']
-              self.setData({list:res.data})
-              self.$apply()
-
-          }).catch(err =>{
-              console.log(err);
-          })
-
-
-      }
-      //跳转到身高体重页
-      goHeightOrWeight(){
-          const self = this;
-          wepy.navigateTo({url:'heightOrWeight?id='+self.data.id});//id 孩子id
-      }
-
-    toast(title, icon, cb) {
-      this.$invoke('toast', 'show', {
-        title: title,
-        img: icon || 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
-      }).then((d) => {
-        cb && cb()
-      })
-    }
-    onShow(){
-        this.getChildrenList()
-    }
-    onLoad(){
-        this.getUserInfo()
-    }
-
-    methods = {
-
-//      agreeGetUser(e) {
-//        if (e.detail.userInfo) {
-//          debugger
-//          let self = this
-//          self.userInfo = e.detail.userInfo
-//
-//          wepy.setStorage({key: 'userInfo', data: self.userInfo})
-//
-//          self.$apply()
-//
-//        }
-//        else {
-//          this.toast('您还未授权')
-//        }
-//      }
-      addChildren(e){
-          let id =e.currentTarget.dataset.id
-
-          if(id){
-              wepy.navigateTo({url:'addChildren?id='+id})
-          }
-          wepy.navigateTo({url:'addChildren'})
-      },
-        goDetail(e){
-            wepy.navigateTo({url:'personalInfo'})
+        components = {
+            toast: Toast
         }
 
+        getUserInfo() {
+            let self = this
+            wepy.getStorage({
+                key: 'userInfo', complete: function (data) {
+                    if (data.data) {
+                        self.userInfo = data.data
+                    }
+                }
+            })
+        }
+
+        getChildrenList() {
+            const self = this
+            request(
+                'getChildrenList',
+            ).then(res => {
+                console.log(res);
+                self.data.list = self.list = res.data
+                if(self.list.length){
+                    self.data.id = res.data[0]['id']
+                    self.setData({list: res.data})
+                }
+                self.$apply()
+
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+
+        onShow() {
+            this.getChildrenList()
+            this.getUserInfo()
+        }
+
+        onLoad() {
+            this.getUserInfo()
+        }
+
+        goArchives(e) {
+            const tempId=e.currentTarget.dataset.index
+            console.log(tempId);
+            wepy.navigateTo({url: 'archives?id=' + tempId})
+        }
+
+        methods = {
+            goexamine() {
+                wepy.navigateTo({url: 'examine?id=0'})
+            },
+            addChildren(e) {
+                wepy.navigateTo({url: 'addChildren'})
+            },
+
+
+            goDetail(e) {
+                if (e.detail.userInfo) {
+
+                    let self = this
+
+                    let user = wepy.getStorageSync('userInfo') ? wepy.getStorageSync('userInfo').nickName : ''
+                    if (!user) {
+                        self.userInfo = e.detail.userInfo
+                        self.$apply()
+                        wepy.setStorage({key: 'userInfo', data: self.userInfo, success: function () {
+                                wepy.navigateTo({url: 'personalInfo'})
+                            }
+                        })
+                    }else {
+                        wepy.navigateTo({url: 'personalInfo'})
+                    }
+                }
+                else {
+                    this.toast('您还未授权')
+                }
+
+
+            },
+            goAboutUs(e){
+                wepy.navigateTo({url:'examine?id=0'})
+            }
+
+        }
     }
-  }
 </script>
 <style lang="less" scoped>
 
-  .container{
-    background-color: #efefef;
-    justify-content: inherit;
-    height: 100vh;
-  }
-  .userInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    background:linear-gradient(to bottom right,#32ECAC,#01C1D7);
-    padding:60rpx 0;
-  }
+    .container {
+        background-color: #efefef;
+        justify-content: inherit;
+        height: 100vh;
+    }
 
-  .userinfo-avatar {
-    width:160rpx;
-    height:160rpx;
-    border-radius:50%;
-    overflow:hidden;
-  }
+    .userInfo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        background: linear-gradient(to bottom right, #32ECAC, #01C1D7);
+        padding: 60rpx 0;
+    }
 
-  .userinfo-nickname {
-    margin-top: 30rpx;
-    color: #FFF;
-    font-size: 40rpx;
-  }
-  .myChildren{
-    display:flex;
-    flex-direction:column;
-    box-sizing:border-box;
-    overflow:scroll;
-    padding-top:60rpx;
-    background-color: #fff;
-    margin-bottom: 40rpx;
-  }
-  .scroll{
-    //height: 300rpx;
-    width: 100vw;
-  }
-  .row{
-    width: 100vw;
-    white-space: nowrap;
-    margin: 40rpx 0;
-  }
-  .item{
-    width: 19vw;
-    margin: 0 3vw;
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .childrenAvatar{
-    width:100%;
-    height: 19vw;
-    border-radius:50%;
-  }
-  .childrenNickname{
-    margin-top: 30rpx;
-    color: #999;
-    font-size: 40rpx;
-  }
-  .myChildrenTitle{
-    font-size: 16px;
-    color: #333;
-    font-weight: 200;
-  }
-  .padding3{
-    padding:0 3vw;
-  }
-  .last{
-    width:100vw;
-    background-color: #fff;
-  }
-  .lastItem{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: 3vw;
-    width: 97vw;
-    border-bottom: 1px solid #efefef;
-    box-sizing: border-box;
-    padding: 30rpx 3vw 30rpx 0;
-  }
-  .about{
-    flex: 1;
-    font-size: 14px;
-    font-weight: 400;
-    color: #666;
-  }
-  .version{
-    font-size: 14px;
-    font-weight: 400;
-    color: #666;
-  }
-  .add{
-    width: 19vw;
-    height:19vw;
-    border-radius: 50%;
-    border: 1px dashed #999;
-    font-size: 60px;
-    font-weight: 100;
-    text-align: center;
-    line-height: 16vw;
-  }
+    .userinfo-avatar {
+        width: 160rpx;
+        height: 160rpx;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .userinfo-nickname {
+        margin-top: 30rpx;
+        color: #FFF;
+        font-size: 40rpx;
+    }
+
+    .myChildren {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        overflow: scroll;
+        padding-top: 60rpx;
+        background-color: #fff;
+        margin-bottom: 40rpx;
+    }
+
+    .scroll {
+        //height: 300rpx;
+        width: 100vw;
+    }
+
+    .row {
+        width: 100vw;
+        white-space: nowrap;
+        margin: 40rpx 0;
+    }
+
+    .item {
+        width: 19vw;
+        margin: 0 3vw;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .nickname{
+        font-size: 14px;
+        font-weight: 300;
+        color: #999;
+        text-align: center;
+    }
+    .childrenAvatar {
+        width: 100%;
+        height: 19vw;
+        border-radius: 50%;
+    }
+
+    .childrenNickname {
+        margin-top: 30rpx;
+        color: #999;
+        font-size: 40rpx;
+    }
+
+    .myChildrenTitle {
+        font-size: 16px;
+        color: #333;
+        font-weight: 200;
+    }
+
+    .padding3 {
+        padding: 0 3vw;
+    }
+
+    .last {
+        width: 100vw;
+        background-color: #fff;
+    }
+
+    .lastItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: 3vw;
+        width: 97vw;
+        border-bottom: 1px solid #efefef;
+        box-sizing: border-box;
+        padding: 30rpx 3vw 30rpx 0;
+    }
+
+    .about {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 400;
+        color: #666;
+    }
+
+    .version {
+        font-size: 14px;
+        font-weight: 400;
+        color: #666;
+    }
+
+    .add {
+        width: 19vw;
+        height: 19vw;
+        border-radius: 50%;
+        border: 1px dashed #999;
+        font-size: 60px;
+        font-weight: 100;
+        text-align: center;
+        line-height: 16vw;
+    }
+    .mt0{
+        margin-top:0;
+    }
 
 
 </style>

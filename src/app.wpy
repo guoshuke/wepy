@@ -47,7 +47,11 @@
                 'pages/personalInfo',
                 'pages/bindMobile',
                 'pages/examine',
-                'pages/questionnaire'
+                'pages/questionnaire',
+                'pages/heightOrWeight',
+                'pages/addHeightOrWeight',
+                'pages/archives',
+                'pages/upload'
             ],
             window: {
                 backgroundTextStyle: 'light',
@@ -111,9 +115,6 @@
         }
 
         onLoad(option) {
-            if(option.storeId){
-                wepy.setStorage({key: 'storeId', data: option?option.storeId:''}) //进来设置微信的storeId
-            }
         }
 
     }

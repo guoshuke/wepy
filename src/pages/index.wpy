@@ -1,23 +1,279 @@
 <style lang="less">
-    .userinfo {
+    view{
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .down{
+        width: 20rpx;
+        height: 13rpx;
+        margin-left: 10rpx;
+    }
+    .topBar{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        font-size: 13px;
+        font-weight: 300;
+        color: #999;
+        width:100vw;
+        height: 80rpx;
+        box-sizing: border-box;
+        text-align:center;
+        border-bottom: 1px solid #f4f4f4;
+        border-top: 1px solid #f4f4f4;
+        padding: 15rpx;
+    }
+    .modal-box{
+        position:fixed;
+        width:100%;
+        height:100%;
+        top:80rpx;
+        background:rgba(0,0,0,0.4);
+        overflow: hidden;
+    }
+
+    .modal-body{
+        position:relative;
+    }
+
+    .modal-content{
+        /* width: 60%; */
+        overflow: hidden;
+        /*border-radius: 10rpx;*/
+    }
+
+    .modal-content{
+        width: 100%;
+    }
+    .mt25{
+        border-top: 25rpx solid #f4f4f4;
+        background-color: #fff;
+
+    }
+    .list{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        box-sizing: border-box;
+        padding-left:4vw;
+    }
+    .item{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 2.5vw 4vw 2.5vw 0;
+        border-bottom: 1px solid #f4f4f4;
+    }
+    .addChild{
+        height: 60rpx;
+        text-align: center;
+        box-sizing: content-box;
+    }
+    .addChild .text{
+        color: #82AEFF;
+    }
+    .headerImg{
+        width: 60rpx;
+        height: 60rpx;
+        border-radius: 60rpx;
+        margin-right: 25rpx;
+    }
+    .icon_right{
+        width: 30rpx;
+        height: 24rpx;
+    }
+    .text{
+        font-size: 14px;
+        font-weight:300;
+        color: #666;
+    }
+    .flex1{
+        flex: 1;
+    }
+    .swiper{
+        height: 150px;
+        width: 100vw;
+    }
+    .bg{
+        background: url("http://glass.unimker.com/assets/images/photo001.png") no-repeat center center;
+        background-size: cover;
+        display: flex;
+        align-items: flex-end;
+    }
+    .swiperBottom{
+        display: flex;
+        flex-direction: row;
+        width: 100vw;
+        align-items: center;
+        color: #fff;
+        padding: 0 4vw;
+        box-sizing: border-box;
+        margin-bottom: 1vw;
+    }
+    .title{
+        display: flex;
+        flex: 1;
+        font-size: 20px;
+    }
+    .iconImg{
+        width: 15rpx;
+        height: 20rpx;
+    }
+    .address{
+        font-size: 12px;
+        font-weight: 300;
+        padding: 0 12rpx;
+    }
+    .inspect{
+        padding: 0 4vw;
+        margin-top: 8vw;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+    .line{
+        border-left:1px dashed #ccc;
+        margin-left: 2vw;
+        width: 90vw;
         display: flex;
         flex-direction: column;
+    }
+    .year{
+        background: url("http://glass.unimker.com/assets/images/b004.png") no-repeat center center;
+        background-size: cover;
+        width: 12vw;
+        height: 6vw;
+        padding-top: 2rpx;
+        box-sizing: border-box;
+        padding-left:16rpx;
+        font-size: 12px;
+        color: #fff;
+        font-weight: 300;
+        position: relative;
+        left:-2vw;
+        margin-bottom: 4vw;
+    }
+    .iconImgLeft{
+        width: 4vw;
+        height: 4vw;
+        position: relative;
+        left: -2vw;
+        margin-right: 10rpx;
+
+    }
+    .history{
+        margin-bottom: 5vw;
+    }
+    .historyTitle{
+        font-size: 16px;
+        color: #c9c9c9;
+        font-weight: 300;
+    }
+    .historyList{
+        background-color: #EFEFEF;
+        display: flex;
+        flex-direction: row;
         align-items: center;
+        box-sizing: border-box;
+        margin: 2vw 3vw 2vw 5vw;
+        padding: 1.5vw;
     }
-
-    .userinfo-avatar {
-        width: 80 rpx;
-        height: 80 rpx;
-        border-radius: 50%;
+    .listLeft{
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        height: 80rpx;
+        justify-content: center;
+        line-height: 40rpx;
     }
-
-    .userinfo-nickname {
-        color: #aaa;
+    .leftEye,.rightEye{
+        color: #555;
+        font-size: 13px;
+        font-weight:400;
+    }
+    .icon-left{
+        color: #999;
+        font-size: 18px;
     }
 </style>
 <template>
     <view class="container">
 
+        <!--<picker bindchange="bindPickerChange" value="{{index}}" range="{{childrenList}}" range-key="nickname" class="flex1">-->
+            <!--<view class="text">-->
+                <!--{{childrenList[index].nickname}} -->
+                <!--<image class="down" src="{{'../asset/8.png'}}" />-->
+            <!--</view>-->
+        <!--</picker>-->
+
+        <view class="topBar" bindtap="show">
+            <view>{{nickname}}</view>
+            <image class="down" src="{{'../asset/8.png'}}" />
+        </view>
+        <swiper class="swiper">
+            <block wx:for="{{swipeList}}" wx:key="{{item.id}}">
+                <swiper-item class="bg" style="background: url('{{baseUrl+item.logo}}')">
+                    <!--<image src="{{item.imgUrl}}" class="slide-image" width="355" height="150"/>-->
+                    <view class="swiperBottom">
+                        <view class="title">{{item.storename}}</view>
+                        <image class="iconImg" src="../asset/15.png" alt=""/>
+                        <view class="address">
+                            {{item.cityarea}}
+                        </view>
+                        <image  class="iconImg" src="../asset/13.png" alt=""/>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+        <view class="inspect">
+            <view class="line">
+                <block wx:for="{{inspect}}"  wx:for-index="year" wx:key="key">
+                    <view class="year">{{item[year].year+'年'}}</view>
+                    <block wx:for="{{item}}" wx:key="h.id" wx:for-item="h">
+                        <view class="history">
+                            <view class="historyTitle">
+                                <image class="iconImgLeft" src="../asset/24.png" alt=""/>
+                                {{h.mon+'月'+h.day+'日'}}
+                            </view>
+                            <view class="historyList">
+                                <view class="listLeft">
+                                    <view class="leftEye">裸眼视力：左眼4.5，右眼4.7</view>
+                                    <view class="rightEye">戴镜视力：左眼1.5，右眼1.7</view>
+                                </view>
+                                <view class="iconfont icon-left"></view>
+                            </view>
+                        </view>
+                    </block>
+                </block>
+            </view>
+        </view>
+
+
+
+        <view class="modal-box" hidden="{{flag}}">
+
+            <view class="modal-body">
+
+                <view class="modal-content mt25">
+                   <repeat for="{{childrenList}}">
+                       <view class="list">
+                           <view class="item" @tap="hide" data-id="{{item.id}}" data-nickname="{{item.nickname}}">
+                               <image src="{{item.avatarurl}}" class="headerImg"/>
+                               <view class="text flex1">{{item.nickname}}</view>
+                               <image wx:if="{{item.id==childId}}" src="../asset/12.png" class="icon_right"/>
+                           </view>
+                       </view>
+                   </repeat>
+                    <view class="list">
+                        <view class="item addChild" @tap="goAddChildren">
+                            <view class="text flex1">+ 添加孩子</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
@@ -37,27 +293,57 @@
         mixins = [testMixin]
 
         data = {
-            userInfo: {
-                nickName: '加载中...'
-            },
-
+            childrenList:[],//孩子列表
+            swipeList:[],//轮播列表
+            childId:null,
+            nickname:'',
+            flag:true,//弹层开关
+            inspect:[],//孩子检查历史列表
+            isLoad:true//第一次去掉onShow中多次获取childrenList
         }
 
         computed = {
 
         }
 
+
         methods = {
+            show:function () {
+                this.flag=!this.data.flag
+                this.$apply()
+            },
+            hide:function (e) {
+                const self = this
+                var id = e.currentTarget.dataset.id
+                var nickname=e.currentTarget.dataset.nickname
+                if(id!=this.data.childId){
+                    this.childId=id
+                    this.nickname=nickname
+                    wepy.setStorage({key: 'defaultChildId', data:{id: id,nickname:nickname}})
+                }
+
+                this.flag=true
+                this.$apply()
+            },
+            goAddChildren:function () {
+                this.flag=true
+                this.$apply()
+                wepy.navigateTo({url: 'addChildren'})
+            },
+
 
             agreeGetUser(e) {
                 if (e.detail.userInfo) {
-                    debugger
+
                     let self = this
                     self.userInfo = e.detail.userInfo
+                    let user =wepy.getStorageSync('userInfo')?wepy.getStorageSync('userInfo').nickName:''
+                    if(!user){
+                        wepy.setStorage({key: 'userInfo', data: self.userInfo})
 
-                    wepy.setStorage({key: 'userInfo', data: self.userInfo})
+                        self.$apply()
+                    }
 
-                    self.$apply()
 
                 }
                 else {
@@ -68,12 +354,19 @@
             }
         }
         relationChild(){
-            if(wx.getStorageSync('defaultChildId')){
-                return
-            }
+            const self = this
             requestUrl('getChildrenList').then(res =>{
                 if(res.data.length){
-                    wepy.setStorage({key: 'defaultChildId', data:{id: res.data[0].id}})
+                    self.childrenList=res.data
+                    self.nickname = res.data[0].nickname
+                    self.childId=res.data[0].id
+                    self.$apply()
+                    wepy.setStorage({key: 'defaultChildId', data:{id: res.data[0].id,nickname:res.data[0].nickname},success:function () {
+                        self.eyesTested() //获取视力检查数据
+                        self.getStoreList() //获取门店列表
+                    }})
+
+
                 }else {
                     //未关联任何孩子
                     wepy.navigateTo({url:'addChildren'})
@@ -81,32 +374,64 @@
 
 
             }).catch(err =>{
+                //console.log(err);
+            })
+        }
+        translateArr(arr){
+            var returnArr=[]
+            var yearList=[]
+            arr.forEach(item=>{
+                let year= item.check_time.split('-')[0]
+                item.year=year
+                item.mon=item.check_time.split('-')[1]
+                item.day=item.check_time.split('-')[2]
+                let index=yearList.findIndex(function(i){return i == year})
+                if(index>-1){
+                    returnArr[index].push(item)
+                }else {
+                    yearList.push(year)
+                    returnArr.push([item])
+                }
+            })
+            return returnArr
+        }
+
+        eyesTested(){
+            const self = this
+            requestUrl('getVisionStats',{id:wepy.getStorageSync('defaultChildId')}).then(res=>{
+                self.inspect= this.translateArr(res.data)
+                self.$apply()
+                console.log(self.inspect);
+            }).catch(err=>{
                 console.log(err);
             })
         }
 
         login(code){
             const self = this
-            let defaultChildId=  wepy.getStorageSync('defaultChildId')
+
+            let defaultChildId=  wepy.getStorageSync('defaultChildId').id
             wepy.request({
                 url: 'http://glass.unimker.com/api/login',
                 data: {
                     code: code,
-                    storeId: wepy.getStorageSync('storeId') || null
+                    storeId: wepy.getStorageSync('storeId') || 1
                 },
                 method: 'POST',
                 success: function (d) {
                     if (d.statusCode == 200) {
                         var temp = {user_id: d.data.data.user_id, login_token: d.data.data.login_token}
-                        wepy.setStorage({key: 'baseData', data: temp})
+                        wepy.setStorage({key: 'baseData', data: temp,success:function () {
+                            self.$parent.globalData.baseData.user_id = d.data.data.user_id
+                            self.$parent.globalData.baseData.login_token = d.data.data.login_token
+                            self.$apply()
 
-                        self.$parent.globalData.baseData.user_id = d.data.data.user_id
-                        self.$parent.globalData.baseData.login_token = d.data.data.login_token
-                        self.$apply()
+                            if(!defaultChildId||defaultChildId=={}){
+                                self.relationChild() //关联孩子
+                            }
+                        }})
 
-                        if(!defaultChildId||defaultChildId=={}){
-                            self.relationChild() //关联孩子
-                        }
+
                     }
                 },
                 fail: function (err) {
@@ -117,13 +442,50 @@
 
         onShow(){
             //this.relationChild()
+            const self = this
+            if(this.data.isLoad) {
+                this.isLoad = false
+            }else {
+                requestUrl('getChildrenList').then(res =>{
+                    if(res.data.length){
+                        self.childrenList=res.data
+                        self.childId=wepy.getStorageSync('defaultChildId').id
+                        self.nickname = res.data.filter(c => c.id==self.childId)[0].nickname
+                        self.$apply()
+                    }else {
+                        //未关联任何孩子
+                        //wepy.navigateTo({url:'addChildren'})
+                    }
+
+
+                }).catch(err =>{
+                    //console.log(err);
+                })
+            }
+        }
+        getStoreList(){
+            const self =this
+            requestUrl('getStoreList').then(res=>{
+                console.log(res);
+                if(res.code==1){
+                    self.swipeList=res.data
+                    self.$apply()
+
+                }
+            }).catch(err=>{
+                console.log(err);
+            })
         }
 
         onLoad(option) {
+            console.log('index load');
             let self = this
             let baseData = wepy.getStorageSync('baseData')
+
+
             if (baseData && baseData != {}) {
-                return this.$parent.globalData.baseData.user_id
+                self.childId=wepy.getStorageSync('defaultChildId')
+                self.relationChild()
             } else {
                 wepy.login({
                     success: function (res) {
@@ -131,6 +493,16 @@
                         self.login(res.code)
                     }
                 })
+            }
+
+
+
+            if(option.storeId){
+
+                wepy.setStorage({key: 'storeId', data: option?option.storeId:'1'}) //进来设置微信的storeId
+            }else {
+
+                wepy.setStorage({key: 'storeId',data:'1'}) //进来设置微信的storeId
             }
 
         }

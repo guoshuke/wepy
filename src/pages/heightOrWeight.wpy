@@ -18,140 +18,18 @@
                 <div class="col-4 titlec">检查日期</div>
             </div>
         </div>
-        <view class="content">
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
+        <scroll-view  class="content" scroll-y bindscrolltolower="scrollBottom">
+            <block wx:for="{{list}}" wx:key="{{id}}">
+                <div class="list-ul">
+                    <div class="item">
+                        <div class="col-3 leftTitle">{{item.height}}</div>
+                        <div class="col-3 leftTitle">{{item.weight}}</div>
+                        <div class="col-4 leftTitle">{{item.check_time}}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-3 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
+            </block>
+
+
             <div class="list-ul">
                 <div class="item">
                     <div class="col-3 leftTitle">146</div>
@@ -160,7 +38,7 @@
                 </div>
             </div>
 
-        </view>
+        </scroll-view>
         <div class="last">
             <div class="add" @tap="goAddHeightOrWeight">添加</div>
         </div>
@@ -176,18 +54,57 @@
             navigationBarTitleText: "身高体重"
         }
 
-        data = {}
+        data = {
+            list:[],
+            total:11,
+            page:1,
+            size:10,
+            id:''
+        }
 
         methods = {
+            scrollBottom:function (e) {
+                if(this.data.size*this.data.page>this.data.total){
+                    return
+                }else {
+                    const self=this
 
+                    request('getRecordBodyList',{child_id:this.data.id,page:this.data.page+1}).then(res=>{
+                        console.log(res);
+                        self.list=self.list.concat(res.data.rows)
+                        this.page=this.data.page+1
+                        self.$apply()
+                    }).catch(err=>{
+                        console.log(err);
+                    })
+                }
+            },
             goAddHeightOrWeight(){
                 const self = this;
                 wepy.navigateTo({url:'addHeightOrWeight?id='+self.data.id});//id 孩子id
             }
         }
+        getRecordSelf(){
+            const self = this
+            if(!this.data.id){
+               return
+            }
+            request('getRecordBodyList',{child_id:this.data.id}).then(res=>{
+                console.log(res);
+                self.list=res.data.rows
+                self.total=res.data.total
+                self.$apply()
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+        onShow(){
+            this.getRecordSelf()
+        }
 
-        onLoad() {
-
+        onLoad(option) {
+            this.id=option.id
+            this.getRecordSelf()
         }
 
     }

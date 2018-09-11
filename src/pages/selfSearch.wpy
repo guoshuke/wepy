@@ -82,12 +82,12 @@
                     <view class="itemText">快速检查近视远视</view>
                 </view>
 
-                <view class="item img18">
+                <view class="item img18" @tap="achromatopsia">
                     <view class="itemTitle">色盲检测</view>
                     <view class="itemText">检查是否有色盲</view>
                 </view>
 
-                <view class="item img19">
+                <view class="item img19" @tap="astigmatism">
                     <view class="itemTitle">散光检查</view>
                     <view class="itemText">检查是否存在散光</view>
                 </view>
@@ -99,14 +99,14 @@
                 <view class="item img20" @tap="questionnaire">
                     <view class="itemTitle">视疲劳症状问卷调查表</view>
                 </view>
-                <view class="item img21">
+                <view class="item img21" @tap="student">
                     <view class="itemTitle">学生用眼睛情况问卷调查表</view>
                 </view>
             </view>
         </view>
         <view class="list">
             <view class="title">近视控制</view>
-            <view class="items">
+            <view class="items" @tap="controller">
                 <view class="item img22">
                     <view class="itemTitle">近视控制意义</view>
                 </view>
@@ -182,7 +182,19 @@
                 wepy.navigateTo({url:'examine?id=2'})
             },
             questionnaire(){
-                wepy.navigateTo({url:'questionnaire?id=2'})
+                wepy.navigateTo({url:'questionnaire?code=exam2&needSum=true'})
+            },
+            student(){
+                wepy.navigateTo({url:'questionnaire?code=exam1'})
+            },
+            achromatopsia(){
+                wepy.navigateTo({url:'examine?id=4'})
+            },
+            astigmatism(){
+                wepy.navigateTo({url:'examine?id=3'})
+            },
+            controller(){
+                wepy.navigateTo({url:'examine?id=1'})
             }
         }
 

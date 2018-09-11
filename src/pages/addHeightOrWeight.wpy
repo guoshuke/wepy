@@ -3,11 +3,11 @@
         <view class="content">
             <div class="list">
                 <div class="item">
-                    <span class="leftTitle">出生日期</span>
-                    <picker mode="date" value="{{date}}" start="1990-09-30" end="2018-10-01" class="flex1"
+                    <span class="leftTitle">检查日期</span>
+                    <picker mode="date" value="{{check_time}}" start="1990-09-30" end="2018-10-01" class="flex1"
                             bindchange="bindDateChange">
                         <view class="text">
-                            {{date}}
+                            {{check_time}}
                         </view>
                     </picker>
                     <span class="iconfont icon-left"></span>
@@ -15,19 +15,19 @@
             </div>
             <div class="list">
                 <div class="item">
-                    <span class="leftTitle">身高</span>
+                    <span class="leftTitle">身高(cm)</span>
                     <input class="text flex1 marginR3" maxlength="3" type="number" value="{{height}}" placeholder="单位cm" bindblur="changeHeight" placeholder-class="placeholderClass"/>
                 </div>
             </div>
             <div class="list">
                 <div class="item">
-                    <span class="leftTitle">体重</span>
+                    <span class="leftTitle">体重(kg)</span>
                     <input class="text flex1 marginR3" maxlength="3" type="number" value="{{weight}}" placeholder="单位kg" bindblur="changeWeight" placeholder-class="placeholderClass"/>
                 </div>
             </div>
         </view>
         <div class="last">
-            <div class="add" @tap="addHeightOrWeight">添加</div>
+            <div class="add" @tap="addHeightOrWeight">完成</div>
         </div>
     </view>
 </template>
@@ -42,16 +42,19 @@
         }
 
         data = {
-            date: '2018-09-03',
+            id:'',
+            check_time: '2018-09-03',
             height:null,
             weight:null,
+            store_id:wx.getStorageSync('storeId'),
+            child_id:wx.getStorageSync('defaultChildId').id,
         }
 
         methods = {
             //日期
             bindDateChange: function (e) {
                 console.log('picker发送选择改变，携带值为', e.detail.value)
-                this.date=e.detail.value
+                this.check_time=e.detail.value
             },
             //体重
             changeWeight:function (e) {
@@ -65,12 +68,19 @@
             },
             //添加
             addHeightOrWeight(){
+                const sendData=this.data
 
+                request('addHealthRecordBody',sendData).then(res=>{
+                    console.log(res);
+                    wepy.showToast({title: res.message})
+                }).catch(err =>{
+                    console.log(err);
+                })
             }
         }
 
-        onLoad() {
-
+        onLoad(option) {
+            this.id=option.id
         }
 
     }
