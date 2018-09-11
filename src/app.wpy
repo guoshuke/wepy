@@ -51,6 +51,7 @@
                 'pages/heightOrWeight',
                 'pages/addHeightOrWeight',
                 'pages/archives',
+                'pages/examination',
                 'pages/upload'
             ],
             window: {

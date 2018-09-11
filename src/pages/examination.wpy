@@ -1,0 +1,198 @@
+<template>
+    <view class="container {{currBg}}">
+        <view class="content">
+            <view class="score">{{currScore+' 分'}}</view>
+            <view class="tips">你已经回答完成！</view>
+            <view class="list list-reference">
+                <view class="reference {{currColor}}">{{currReference}}</view>
+            </view>
+            <view class="list list-introduce">
+                <view class="introduce">{{currIntroduce}}</view>
+            </view>
+        </view>
+        <view class="last">
+            <view class="reassessment" @tap="reassessmentFunc">重新评测</view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import request from '../mixins/service'
+
+    export default class examination extends wepy.page {
+
+        config = {
+            navigationBarTitleText: "视疲劳症状自查"
+        }
+
+        data = {
+            tipsArr:[
+                {score:'得分>28分',tip:'怀疑出现高度视疲劳症状，建议家庭训练配合训练室强化训练同时进行，针对近视的快速发展、视疲劳症状明显、弱视及眼科术后进行视功能重塑训练。'},
+                {score:'28分≥得分≥16分',tip:'疑似视疲劳，建议以家庭训练为主，辅助训练室强化训练，进行改善视疲劳症状训练、预防早老花训练，针对眼科术后进行视功能重塑训练。'},
+                {score:'得分<16分',tip:'视疲劳症状不明显，建议以家庭训练为主，进行缓解视疲劳的训练。'},
+            ],
+            currBg:'',
+            currColor:'',
+            currScore:'',
+            currReference:'',
+            currIntroduce:'',
+        }
+
+        methods = {
+            reassessmentFunc(){
+
+            }
+        }
+        onLoad(option) {
+            this.currScore = option.sum;
+            if(option.sum > 28){
+                this.currBg = 'redbg';
+                this.currColor = 'redcolor';
+                this.currReference = tipsArr[0].score;
+                this.currIntroduce = tipsArr[0].tip;
+            }
+
+            if(option.sum>=16&&option.sum<=28){
+                this.currBg = 'bluebg';
+                this.currColor = 'bluecolor';
+                this.currReference = tipsArr[1].score;
+                this.currIntroduce = tipsArr[1].tip;
+            }
+
+            if(option.sum < 16){
+                this.currBg = 'greenbg';
+                this.currColor = 'greencolor';
+                this.currReference = tipsArr[2].score;
+                this.currIntroduce = tipsArr[2].tip;
+            }
+        }
+
+    }
+</script>
+<style>
+    /*大于28是9.png*/
+    .redbg{
+        background:url(http://glass.unimker.com/assets/images/b001.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .redcolor{
+        color:#ed6d69;
+    }
+    /*大于16小于28是11.png*/
+    .bluebg{
+        background:#FFF url(http://glass.unimker.com/assets/images/b002.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .bluecolor{
+        color:#f17937;
+    }
+    /*小于16是10.png*/
+    .greenbg{
+        background:#FFF url(http://glass.unimker.com/assets/images/b003.png) no-repeat;
+        background-size: 100% 100%;
+    }
+    .greencolor{
+        color:#69c1da;
+    }
+    .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background-color: #f3f3f3;
+    }
+    .content{
+        /*display:flex;*/
+        overflow:scroll;
+        justify-content: space-between;
+        flex:1
+    }
+    .scoreBox{
+        color:#fff;
+        display: flex;
+        align-items:center;/*垂直居中*/
+        justify-content: center;/*水平居中*/
+        width:100%;
+        height:32vw;
+        box-sizing: border-box;
+        min-height: 32vh;
+    }
+    .score{
+        color:#fff;
+        display: flex;
+        align-items:center;/*垂直居中*/
+        justify-content: center;/*水平居中*/
+        width:100%;
+        /*height:20vh;*/
+        font-size: 68px;
+        font-weight: 500;
+        box-sizing: border-box;
+        min-height: 15vh;
+        padding-top: 13vh;
+    }
+    .tips{
+        color:#fff;
+        display: flex;
+        align-items:center;/*垂直居中*/
+        justify-content: center;/*水平居中*/
+        width:100%;
+        height: 4vh;
+        line-height: 4vh;
+        font-size: 16px;
+        font-weight: 300;
+        box-sizing: border-box;
+        min-height: 4vh;
+    }
+    .list {
+        width: 100vw;
+        display: flex;
+        /*background-color: #fff;*/
+        box-sizing: border-box;
+        padding-left: 3vw;
+        min-height: 9vh;
+    }
+    .list-reference{
+        padding:20vh 8vw 0 8vw;
+    }
+    .reference{
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        font-weight: 300;
+    }
+    .introduce{
+        line-height:3vh;
+        font-size:14px;
+        font-weight:300;
+        color:#888;
+    }
+    .list-introduce{
+        padding:2vh 8vw 0 8vw;
+    }
+    .flex1 {
+        flex: 1
+    }
+    .last{
+        display: flex;
+        flex-direction: column;
+    }
+    .reassessment {
+        display: inline-block;
+        width: 70vw;
+        text-align: center;
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 40px;
+        /*position: absolute;*/
+        left: 15vw;
+        font-size: 16px;
+        font-weight: 300;
+        background: linear-gradient(to right, #32ECAC, #01C1D7);
+        color: #fff;
+        margin-top:20px;
+        margin-bottom:20px;
+    }
+</style>
