@@ -1,0 +1,171 @@
+<style lang="less" scoped>
+    .container{
+        background-color: #f3f3f3;
+        justify-content: inherit;
+        height: 100vh;
+    }
+    .tip{
+        padding:3vw 4vw;
+        font-size: 14px;
+        color: #666;
+        font-weight: 300;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+    .table{
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        width: 100vw;
+    }
+
+    .table {
+        view,text{
+            border-right: 1px solid #f3f3f3;
+            border-bottom: 1px solid #f3f3f3;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .row{
+            font-size: 14px;
+            font-weight: 300;
+            color: #333;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: none;
+            border-right:none;
+            height: 120rpx;
+        }
+        .col3T,.col3B{
+            color: #888;
+        }
+        .col1{
+            width: 13vw;
+            height: 100%;
+        }
+        .col2,.col3{
+            flex-direction: column;
+            width: 6vw;
+            height: 100%;
+            justify-content:space-around;
+        }
+        .col2T,.col2B,.col3T,.col3B{
+            width: 100%;
+            height: 100%;
+        }
+        .col3{
+            width: 13.7vw;
+        }
+
+        .bNone{
+            border: none;
+        }
+        .flex1{
+            flex: 1;
+        }
+        .bb{
+            border-bottom: 1px solid #f3f3f3;
+        }
+    }
+
+</style>
+<template>
+    <view class="container">
+        <view class="tip">
+           检查日期：{{allData.check_time}}
+        </view>
+        <view class="table">
+            <view class="row rowTitle">
+                <text class="col1">电脑\n验光</text>
+
+                <view class="col2 bNone">
+                    <view class="col2T">R</view>
+                    <view class="col2B">L</view>
+                </view>
+                <view class="col3">
+                    <view class="col3T">{{allData.item2}}</view>
+                    <view class="col3B">{{allData.item1}}</view>
+                </view>
+                <text class="col1">裸眼\n视力</text>
+                <view class="col2">
+                    <view class="col2T">R</view>
+                    <view class="col2B">L</view>
+                </view>
+                <view class="col3 flex1">
+                    <view class="col3T">{{allData.item14}}</view>
+                    <view class="col3B">{{allData.item13}}</view>
+                </view>
+            </view>
+            <view class="row rowTitle">
+                <text class="col1">综合\n测光</text>
+
+                <view class="col2">
+                    <view class="col2T">R</view>
+                    <view class="col2B">L</view>
+                </view>
+                <view class="col3">
+                    <view class="col3T">{{allData.item4}}</view>
+                    <view class="col3B">{{allData.item3}}</view>
+                </view>
+                <text class="col1">矫正\n视力</text>
+                <view class="col2">
+                    <view class="col2T">R</view>
+                    <view class="col2B">L</view>
+                </view>
+                <view class="col3">
+                    <view class="col3T">{{allData.item16}}</view>
+                    <view class="col3B">{{allData.item15}}</view>
+                </view>
+                <text class="col1">主视力</text>
+                <view class="col2">
+                    <view class="col2T">R</view>
+                    <view class="col2B">L</view>
+                </view>
+                <view class="col3">
+                    <view class="col3T">{{allData.item6}}</view>
+                    <view class="col3B">{{allData.item5}}</view>
+                </view>
+            </view>
+        </view>
+
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import testMixin from '../mixins/test'
+    import request   from '../mixins/service'
+
+    export default class optometry extends wepy.page {
+        config = {
+            navigationBarTitleText: '视力统计'
+        }
+        data = {
+            inspect:[],
+            allData:{}
+        }
+        methods={
+            changeIndex:function (e) {
+
+            }
+        }
+        mixins = [testMixin]
+
+        onLoad(option){
+            const self = this
+            request('getVisionDetail',{id:option.id}).then(res=>{
+                self.allData = res.data
+                self.$apply()
+                console.log(self.allData);
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+
+    }
+</script>

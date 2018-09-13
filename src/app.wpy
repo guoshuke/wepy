@@ -34,7 +34,6 @@
     import wepy from 'wepy'
     import 'wepy-async-function'
 
-
     export default class extends wepy.app {
         config = {
             pages: [
@@ -42,7 +41,6 @@
                 'pages/selfSearch',
                 'pages/information',
                 'pages/my',
-                //'pages/t1',
                 'pages/addChildren',
                 'pages/personalInfo',
                 'pages/bindMobile',
@@ -52,7 +50,10 @@
                 'pages/addHeightOrWeight',
                 'pages/archives',
                 'pages/examination',
-                'pages/upload'
+                'pages/upload',
+                'pages/storeDetail',
+                'pages/vision',
+                'pages/optometry'
             ],
             window: {
                 backgroundTextStyle: 'light',
@@ -85,38 +86,17 @@
                 }]
             }
         }
-
         globalData = {
-            userInfo: null,
-            baseData: {
-                user_id: '',
-                login_token: ''
-            },
-            childrenList: []
+            userInfo:wx.getStorageSync('userInfo')||{},
+            baseData:wx.getStorageSync('baseData')||{},
         }
-
-        constructor() {
-            super()
+        getGlobalData(self){
+                self.defaultChildId=wx.getStorageSync('defaultChild').id||null
+                self.defaultChildName=wx.getStorageSync('defaultChild').nickname||''
+                self.storeId=wx.getStorageSync('storeId')||null
+                self.childrenList=wx.getStorageSync('childrenList')||[]
+                self.userInfo=wx.getStorageSync('userInfo')||{}
+                self.baseData=wx.getStorageSync('baseData')||{}
         }
-
-
-
-        getUserInfo(cb) {
-            const that = this
-
-            if (this.globalData.userInfo) {
-                return this.globalData.userInfo
-            }
-            wepy.getUserInfo({
-                success(res) {
-                    that.globalData.userInfo = res.userInfo
-                    cb && cb(res.userInfo)
-                }
-            })
-        }
-
-        onLoad(option) {
-        }
-
     }
 </script>

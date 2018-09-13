@@ -14,12 +14,20 @@
                 </div>
             </div>
             <div class="list">
+                <div class="item">
+                    <span class="leftTitle">检查地点</span>
+                    <input class="text flex1" minlength="2" maxlength="20" type="text" value="{{place}}"
+                           bindblur="changePlace"/>
+                    <span class="iconfont icon-left"></span>
+                </div>
+            </div>
+            <div class="list">
                 <div class="item bbNone">
                     <span class="leftTitle">上传图片</span>
                     <scroll-view scroll-x class="row">
                         <block wx:for='{{imgList}}'>
                             <div class="items" data-index="{{item.id}}" @tap="goArchives">
-                                <image src='{{item.avatarUrl}}' class="childrenAvatar"/>
+                                <image src='{{item.image}}' class="childrenAvatar"/>
                             </div>
                         </block>
                         <view wx:if="{{imgList.length<6}}" class="items" @tap="uploadImg">
@@ -59,9 +67,10 @@
 
         data = {
             id:'',
-            date: '1990-09-30',
+            date: '2018-09-20',
             imgList:[],
-            store_id:wepy.getStorageSync('storeId')?wepy.getStorageSync('storeId').storeId:'',
+            place:'',
+            store_id:wepy.getStorageSync('storeId'),
             index:0
         }
 
@@ -85,17 +94,36 @@
                 console.log('picker发送选择改变，携带值为', e.detail.value)
                 this.date=e.detail.value
             },
-            //身高
-            changeHeight:function (e) {
-                this.height=e.detail.value
+            //地方
+            changePlace:function (e) {
+                this.place=e.detail.value
 
             },
             //添加
             addHeightOrWeight(){
                 const sendData={
-                    child_id:this.data
+                    child_id:this.data.id,
+                    check_time:this.data.date,
+                    image:this.data.imgList,
+                    check_place:this.data.place
                 }
-                request('addHealthRecordBody')
+                if(!sendData.image.length){
+                    wx.showToast({title:'至少上传一张图片',icon:'none'})
+                    return
+                }
+                debugger
+                request('addHealthRecordSelf',sendData).then(res=>{
+                    if(res.code==1){
+                        wx.showToast({title:res.message})
+                        setTimeout(function () {
+                            wepy.navigateBack({delta:1})
+                        },1500)
+                    }else {
+                        wx.showToast({title:res.message,icon:'none'})
+                    }
+                }).catch(err=>{
+                    wx.showToast({title:'网络连接失败',icon:'none'})
+                })
             },
             uploadImg: function () {
                 const self = this
@@ -135,12 +163,12 @@
 //                                    });
                                     //self.avatarUrl = 'data:image/jpeg;base64,' + base64
                                     self.index=self.data.index+1
-                                    self.imgList.push({id:self.index,avatarUrl:'data:image/jpeg;base64,' + base64})
+                                    var base='data:image/jpeg;base64,' + base64
+                                    self.imgList.push({image:base})
                                     self.$apply()
 
                                 },
                                 fail(res) {
-                                    wx.showToast({title: '我执行了3'})
 
                                     console.log(res)
                                 },

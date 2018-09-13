@@ -7,16 +7,17 @@
             <div class="list">
                 <div class="item">
                     <span class="leftTitle">手机号</span>
-                    <input class="text flex1" maxlength="11" type="number" placeholder="请输入您的手机号" value="{{mobile}}"
-                          bindblur="changeMobile" placeholder-class="placeholderClass"/>
+                    <input class="text flex1" maxlength="11" type="number" placeholder="请输入您的手机号" value="{{userInfo.mobile}}"
+                           bindblur="changeMobile" placeholder-class="placeholderClass"/>
                 </div>
             </div>
             <div class="list">
                 <div class="item">
                     <span class="leftTitle">验证码</span>
-                    <input class="text flex1" maxlength="6" type="number" placeholder="请输入您的手机号" value="{{code}}"
-                          bindblur="changeCode" placeholder-class="placeholderClass"/>
-                    <span class="leftTitle {{noTime?'':'color'}}" @tap="reqCode">{{noTime ? (time - noTime)+'s' : '获取验证码'}}</span>
+                    <input class="text flex1" maxlength="6" type="number" placeholder="请输入验证码" value="{{code}}"
+                           bindblur="changeCode" placeholder-class="placeholderClass"/>
+                    <span class="leftTitle {{noTime?'':'color'}}"
+                          @tap="reqCode">{{noTime ? (time - noTime) + 's' : '获取验证码'}}</span>
                 </div>
             </div>
         </div>
@@ -36,83 +37,98 @@
             navigationBarTitleText: '绑定手机'
         }
         data = {
-            mobile: null,
             code: null,
-            time: 10,
+            time: 60,
             noTime: 0,
-            isLoading:false
+            isLoading: false,
+            code_token:''
         }
-        timer(){
+
+        timer() {
             this.noTime++
             this.$apply()
 
         }
+
         //mixins = [testMixin]
         methods = {
             submit: function () {
-                wepy.request({
-                    url: 'http://glass.unimker.com/api/mobileBind',
-                    data: temp,
-                    method: 'POST',
-                    success: function (f) {
-                        console.log('code=========>' + f);
-                        self.$parent.globalData.userInfo = f.data.data
-                    },
-                    fail: function (err) {
-                        console.log(err);
+
+                var sendData={
+                    code:this.data.code,
+                    code_token:this.data.code_token,
+                    mobile:this.userInfo.mobile
+                }
+                if(!sendData.mobile){
+                    wx.showToast({title:'请输入手机号',icon:'none'})
+                }
+                if(!sendData.code){
+                    wx.showToast({title:'请输入验证码',icon:'none'})
+                }
+                debugger
+                request('mobileBind', sendData).then(f => {
+                    console.log('code=========>' + f);
+                    debugger
+                    if(f.code!=1){
+                        wx.showToast({title:f.message,icon:'none'})
+                    }else {
+                        wx.showToast({title:'绑定成功'})
+                        setTimeout(function () {
+                            wepy.navigateBack({delta:2})
+                        },1500)
                     }
+
+                }).catch(err => {
+                    console.log(err);
                 })
             },
             reqCode: function () {
-                if(!this.data.isLoading) {
+                const  self= this
+                if (!this.data.isLoading) {
                     this.isLoading = true
                     this.$apply()
                     this.timer()
 
-//                wepy.request({
-//                    url: 'http://glass.unimker.com/api/sendSms',
-//                    data: {
-//                        mobile: this.data.mobile
-//                    },
-//                    method: 'POST',
-//                    success: function (f) {
-//                        console.log('code=========>' + f);
-//                        if (f.data.code == 1) {
-//                            console.log('开始计时');
+                    request('sendSms', {mobile: this.userInfo.mobile}).then(res => {
+                        if (res.code == 1) {
+                            console.log('开始计时');
+                            self.code_token=res.data.code_token
+                            self.$apply()
+                            debugger
+                            var s = setInterval(() => {
+                                self.timer()
+                                //console.log('剩余 ' + (time - noTime) + 's');
+                                if (self.data.noTime >= slef.data.time) {
+                                    self.noTime = 0
+                                    self.isLoading = false
+                                    self.$apply()
+                                    clearInterval(s)
 
-                    var s = setInterval(() => {
-                        this.timer()
-                        //console.log('剩余 ' + (time - noTime) + 's');
-                        if (this.data.noTime >= this.data.time) {
-                            this.noTime = 0
-                            this.isLoading = false
-                            this.$apply()
-                            clearInterval(s)
-
+                                }
+                            }, 1000)
+                        }else {
+                            wx.showToast({title:res.message,icon:'none'})
+                            self.noTime = 0
+                            self.isLoading = false
+                            self.$apply()
                         }
-                    }, 1000)
+                    }).catch(err => {
+
+                    })
+
                 }
-//                        } else {
-//                            this.toast(f.data.message)
-//                        }
-//                        //self.$parent.globalData.userInfo = f.data.data
-//                    },
-//                    fail: function (err) {
-//                        console.log(err);
-//                    }
-//                }) //
             },
             changeMobile: function (e) {
-                this.mobile = e.detail.value
+                this.userInfo.mobile = e.detail.value
             },
-            changeCode:function (e) {
+            changeCode: function (e) {
                 this.code = e.detail.value
             }
         }
 
 
         onLoad(option) {
-
+            this.$parent.getGlobalData(this)
         }
     }
 </script>
@@ -128,11 +144,12 @@
     }
 
     .tip {
-        height: 10vh;
-        display: block;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        height: 8vh;
         color: #999;
         font-size: 14px;
-        line-height: 14vh;
         padding: 0 3vw;
     }
 
@@ -199,7 +216,8 @@
         color: #fff;
         margin-bottom: 20px;
     }
-    .color{
+
+    .color {
         color: #3ad9d4;
     }
 

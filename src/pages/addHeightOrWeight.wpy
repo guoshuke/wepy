@@ -47,7 +47,7 @@
             height:null,
             weight:null,
             store_id:wx.getStorageSync('storeId'),
-            child_id:wx.getStorageSync('defaultChildId').id,
+            child_id:wx.getStorageSync('defaultChild').id,
         }
 
         methods = {
@@ -73,6 +73,9 @@
                 request('addHealthRecordBody',sendData).then(res=>{
                     console.log(res);
                     wepy.showToast({title: res.message})
+                    setTimeout(function () {
+                        wepy.navigateBack({delta:1})
+                    },1500)
                 }).catch(err =>{
                     console.log(err);
                 })

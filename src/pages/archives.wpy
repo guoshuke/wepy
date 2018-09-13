@@ -1,5 +1,5 @@
 <template>
-    <view class="container">
+    <scroll-view  scroll-y class="container"  bindscrolltolower="scrollBottom" bindscrolltoupper="scrollTop">
         <div class="top">
             <view class="leftImg">
                 <image class="img" src="{{avatarUrl}}"/>
@@ -19,11 +19,11 @@
                 </div>
                 <div class="info">
                     <span class="title">身高：</span>
-                    <span class="value">{{height}}</span>
+                    <span class="value">{{height}} cm</span>
                 </div>
                 <div class="info">
                     <span class="title">体重：</span>
-                    <span class="value">{{width}}</span>
+                    <span class="value">{{weight}} kg</span>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="list">
-            <div class="item">
+            <div class="item" @tap="goVision">
                 <span class="leftTitle flex1">视力统计</span>
                 <span class="iconfont icon-left"></span>
             </div>
@@ -45,43 +45,19 @@
                 <span class="upload" @tap="goUpload">上传</span>
             </div>
         </div>
-        <div class="checkData">
-            <div class="items">
-                <div class="dataTitle"><image class="iconLeft" src="../asset/24.png"/> <div class="dataTitleName">2018-09-01 吴江人民医院</div></div>
-                <scroll-view class="imgs">
-                    <image class="dataImg" src="{{'../asset/5.png'}}"/>
-                    <image class="dataImg" src="{{'../asset/5.png'}}"/>
-                </scroll-view>
-            </div>
-            <div class="items">
-                <div class="dataTitle"><image class="iconLeft" src="../asset/24.png"/> <div class="dataTitleName">2018-09-01 吴江人民医院</div></div>
-                <!--<view class="scroll">-->
-                    <!--<scroll-view scroll-x class="row">-->
-                        <!--<block wx:for='{{list}}'>-->
-                            <!--<div class="item" data-index="{{item.id}}" @tap="goArchives">-->
-                                <!--<image src='{{item.avatarurl}}' class="childrenAvatar"/>-->
-                                <!--<view class="nickname">{{item.nickname}}</view>-->
-                            <!--</div>-->
-                        <!--</block>-->
-                        <!--<view class="item" @tap="addChildren">-->
-                            <!--<view class="add">+</view>-->
-                        <!--</view>-->
-                    <!--</scroll-view>-->
-                <!--</view>-->
-
-
-                    <scroll-view scroll-x class="imgs">
-                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
-                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
-                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
-                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
-                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
-                        <image class="dataImg" src="{{'../asset/5.png'}}"/>
+        <view class="checkData">
+            <block wx:for="{{list}}" wx:key="{{item.id}}">
+                <div class="items">
+                    <div class="dataTitle"><image class="iconLeft" src="../asset/24.png"/> <div class="dataTitleName">{{item.check_time+' '+ item.check_place}}</div></div>
+                    <scroll-view class="imgs">
+                        <block wx:for="{{item.image}}" wx:key="{{index}}">
+                            <image class="dataImg" src="{{baseUrl+item.image}}"/>
+                        </block>
                     </scroll-view>
-
-            </div>
-        </div>
-    </view>
+                </div>
+            </block>
+        </view>
+    </scroll-view>
 </template>
 <script>
     import wepy from 'wepy'
@@ -100,25 +76,9 @@
             sexName:'',
             nickName:'',
             avatarUrl:'',
-            list:[{
-                "id": 1,
-                "child_id": 1,
-                "user_id": 0,
-                "check_time": "2018-01-01",
-                "check_place": "aaaaaaaaaaaaaa",
-                "image": "../asset/6.png",
-                "sort": 1,
-                "updated_at": null
-            }, {
-                "id": 2,
-                "child_id": 1,
-                "user_id": 0,
-                "check_time": "2018-01-01",
-                "check_place": "bbbbbbbbbbbbb",
-                "image": "../asset/6.png",
-                "sort": 1,
-                "updated_at": null
-            }]
+            list:[],
+            page:1,
+            total:11
         }
         methods = {
             goAddChildren:function (e) {
@@ -129,6 +89,25 @@
             },
             goUpload:function () {
                 wepy.navigateTo({url: 'upload?id='+this.data.id})
+            },
+            goVision:function(){
+                wepy.navigateTo({url: 'vision'})
+            },
+            scrollBottom:function () {
+                if(this.total<this.data.page*10){
+                    return
+                }
+                this.page=this.data.page+1
+                this.$apply()
+
+                this.getRecordSelf(this.page)
+            },
+            scrollTop(){
+                this.page=1
+                this.total=11
+                this.list=[]
+                this.$apply()
+                this.getRecordSelf(this.page)
             }
         }
         mixins = [mixin]
@@ -141,6 +120,27 @@
             this.avatarUrl = this.baseUrl + data.avatarurl
             this.$apply()
         }
+
+        getRecordSelf(page){
+            const self = this
+            var sendData={
+                child_id:wepy.getStorageSync('defaultChild').id
+            }
+            if(page){
+                sendData.page=page
+            }
+            request('getRecordSelf',sendData).then(res=>{
+                console.log(res);
+                self.list = self.data.list.concat(res.data.rows)
+                self.total=res.data.total
+                self.$apply()
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+        onShow(){
+            this.getRecordSelf()
+        }
         onLoad(option){
             console.log(option);
             const self = this
@@ -148,6 +148,7 @@
                 self.id=option.id
                 request('getChildInfo', {id: option.id}).then(res => {
                     console.log(res.data);
+
                     self.getChildInfo(res.data)
                 }).catch(err => {
 
@@ -162,7 +163,8 @@
 </script>
 <style>
     .container {
-        height: 100%;
+        height: 100vh;
+        width: 100vw;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -262,7 +264,7 @@
     }
     .upload{
         padding:6rpx 18rpx;
-        border-radius: 20rpx;
+        border-radius: 28rpx;
         font-size: 14px;
         color: #fff;
         font-weight: 300;

@@ -36,35 +36,52 @@
             currScore:'',
             currReference:'',
             currIntroduce:'',
+            grading:[]
+        }
+        onUnload(){
+            wepy.navigateBack({delta:2})
         }
 
         methods = {
             reassessmentFunc(){
+                wepy.navigateTo({url:'questionnaire?code=exam2&needSum=true'})
 
             }
         }
+        translateState(arr,score){
+            arr.forEach((item,index)=>{
+                if(item.score_max&&score>item.score_max) {
+                    this.currBg = 'redbg';
+                    this.currColor = 'redcolor';
+                    this.currIntroduce=item.desc
+                    this.currReference = '得分>'+item.score_max+'分';
+                }else if(item.score_min&&score<item.score_min&&item.score_max==0) {
+                    this.currBg = 'greenbg';
+                    this.currColor = 'greencolor';
+                    this.currIntroduce = item.desc;
+                    this.currReference = '得分<'+item.score_min+'分'
+                }else if(score<item.score_max&&score>item.score_min&&item.score_min){
+                    this.currBg = 'bluebg';
+                    this.currColor = 'bluecolor';
+                    this.currIntroduce = item.desc;
+                    this.currReference  = item.score_min+"分≥得分≥"+item.score_max+'分'
+                }else {
+
+                }
+            })
+            this.$apply()
+        }
         onLoad(option) {
-            this.currScore = option.sum;
-            if(option.sum > 28){
-                this.currBg = 'redbg';
-                this.currColor = 'redcolor';
-                this.currReference = tipsArr[0].score;
-                this.currIntroduce = tipsArr[0].tip;
-            }
-
-            if(option.sum>=16&&option.sum<=28){
-                this.currBg = 'bluebg';
-                this.currColor = 'bluecolor';
-                this.currReference = tipsArr[1].score;
-                this.currIntroduce = tipsArr[1].tip;
-            }
-
-            if(option.sum < 16){
-                this.currBg = 'greenbg';
-                this.currColor = 'greencolor';
-                this.currReference = tipsArr[2].score;
-                this.currIntroduce = tipsArr[2].tip;
-            }
+            this.currScore = option.score;
+            const self = this
+            request('getPaperDetail',{code:option.code}).then(res=> {
+                //res =JSON.parse(res.data)
+                console.log(res);
+                self.tipsArr=res.data.grading
+                self.translateState(self.tipsArr,self.currScore)
+            }).catch(err=>{
+                console.log(err);
+            })
         }
 
     }

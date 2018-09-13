@@ -1,7 +1,7 @@
 <template>
     <view class="container">
         <swiper class="swiper" current="{{currentTab}}">
-            <block wx:for="{{question}}" >
+            <block wx:for="{{question}}" wx:key="{{item.id}}">
                 <swiper-item class="swiperItem" catchtouchmove='true'>
                     <view>
                         <view class="topBar">
@@ -10,14 +10,13 @@
                         </view>
                         <view class="list">
                             <text class="title">{{(index+1)+'/'+question.length+'、'+item.name}}</text>
-                            <block wx:for="{{answerList}}">
+                            <block wx:for="{{answerList}}" wx:key="{{item.id}}">
                                 <view class="selectItem" @tap="selectOption" data-num="{{item.score}}">
                                     <image class="selectImg" src="{{index===selectIndex?'../asset/5.png':'../asset/4.png'}}"/>
                                     {{item.name}}
                                 </view>
                             </block>
-                            <view wx:if="{{index!=question.length-1}}" data-index="{{index}}" data-id="{{item.id}}" class="next" @tap="goNext">下一题</view>
-                            <view wx:if="{{index==question.length-1}}" data-index="{{index}}" class="next" @tap="goNext">提交</view>
+                            <view data-index="{{index}}" data-id="{{item.id}}" class="next" @tap="goNext">{{index!=question.length-1?'下一题':'提交'}}</view>
                             <view wx:if="{{selectIndex!==null}}" class="suggest">建议：请爱护眼镜，经常做眼睛保健操</view>
                         </view>
                     </view>
@@ -43,11 +42,15 @@
             needSum:false,
             sum:0,//得分总和
             sendData:{
-                "child_id": wx.getStorageSync('defaultChildId').id,
+                "child_id": wx.getStorageSync('defaultChild').id,
                 "paper_code": null,
-                "question": []
+                "question": [],
+                "store_id":wx.getStorageSync('storeId')
             }
 
+        }
+        onUnload(){
+            wepy.navigateBack({delta:2})
         }
         methods = {
             goNext:function(e){
@@ -55,33 +58,35 @@
                     wepy.showToast({title: '请选择一个答案', icon: 'none'})
                     return
                 }
-                if(e.target.dataset.index+1!=this.data.question.length){
-                    //this.setData({currentTab:this.data.currentTab+1})
-                    this.sum=this.data.sum+this.data.selectIndex
-                    this.sendData.question.push({
-                        "id": e.target.dataset.id,
-                        "answer": this.data.selectIndex
-                    })
-                    this.selectIndex=null
-                    this.currentTab=this.data.currentTab+1
+                this.sum=this.data.sum+this.data.selectIndex
+                this.sendData.question.push({
+                    "id": e.target.dataset.id,
+                    "answer": this.data.selectIndex
+                })
+                this.selectIndex=null
+                this.currentTab=this.data.currentTab+1
 
-                    this.getAnswerList(this.data.question[this.currentTab].id)
-                    this.$apply()
-                    console.log(this.data.sum);
-                }else {
+
+                this.$apply()
+                console.log(this.data.sum)
+                const self = this
+                if(e.target.dataset.index+1==this.data.question.length){
+                    //this.setData({currentTab:this.data.currentTab+1})
                     request('setAnswer',this.data.sendData).then(res=>{
                         console.log(res);
                         if(res.code==1){
                             wepy.showToast({title: '提交成功'})
+                            debugger
                             setTimeout(function () {
-                                wepy.navigateBack({
-                                    delta: 1
-                                })
+                                wepy.navigateTo({url:'examination?score='+res.data+'&code='+self.data.code})
                             },1500)
                         }
                     }).catch(err=>{
                         console.log(err)
                     })
+                }else {
+                    this.getAnswerList(this.data.question[this.currentTab].id)
+                    this.$apply()
                 }
             },
             selectOption:function (e) {
@@ -89,7 +94,8 @@
                 this.selectIndex = e.currentTarget.dataset.num-0
                 this.isSelect=true
                 this.$apply()
-            }
+            },
+
         }
         onLoad(option){
             console.log(option);

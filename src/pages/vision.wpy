@@ -1,0 +1,240 @@
+<style lang="less" scoped>
+    .container{
+        background-color: #f3f3f3;
+        justify-content: inherit;
+        height: 100vh;
+    }
+    .tip{
+        padding:3vw 4vw;
+        font-size: 14px;
+        color: #666;
+        font-weight: 300;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+    .table{
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        width: 100vw;
+    }
+    .table view{
+        border-right: 1px solid #f3f3f3;
+        border-bottom: 1px solid #f3f3f3;
+    }
+    .row{
+        font-size: 14px;
+        font-weight: 300;
+        color: #333;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 160rpx;
+    }
+    .table .row{
+        border-bottom: none;
+        border-right:none;
+    }
+    .rowTitle{
+        color: #888;
+        height: 120rpx;
+    }
+    .rowTitle view{
+        font-size: 12px;
+    }
+    .col1{
+        display: flex;
+        flex-direction: row;
+        width: 33vw;
+        height: 100%;
+        justify-content:space-around;
+        align-items:center;
+    }
+    .col2{
+        display: flex;
+        flex-direction: column;
+        width: 37vw;
+        height: 100%;
+        justify-content: space-around;
+    }
+    .table .col2,.table .col2b{
+        border-bottom:none;
+        border-right:none;
+    }
+    .col3,.col4{
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        height: 100%;
+        justify-content: space-around;
+    }
+    .col2t{
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .col2b{
+        display: flex;
+        height: 50%;
+    }
+    .colbf{
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+    }
+    .date{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 22vw;
+        height: 100%;
+    }
+    .table .col1Eye{
+        display: flex;
+        flex: 1;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        border-bottom: none;
+        border-right:none;
+    }
+    .table .col1EyeT{
+        display: flex;
+        flex: 1;
+        height: 100%;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        border-bottom: none;
+        border-right:none;
+    }
+    .table .col3I,.table .col4I{
+        display: flex;
+        height: 100%;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        border-bottom: none;
+        border-right:none;
+    }
+    .table .bb{
+        border-bottom: 1px solid #f3f3f3;
+    }
+    .table .bb2{
+        border-bottom: 2px solid #ddd;
+    }
+    .swiper{
+        height: 170rpx;
+        width: 100vw;
+    }
+</style>
+<template>
+    <view class="container">
+        <view class="tip">
+            提示：若发现度数上升，请三个月内检查一次
+        </view>
+        <view class="table">
+            <view class="row rowTitle">
+                <view class="col1">
+                    检查日期
+                </view>
+                <view class="col2">
+                    <view class="col2t">
+                        戴镜度数
+                    </view>
+                    <view class="col2b">
+                        <view class="colbf">近视</view>
+                        <view class="colbf">散光</view>
+                        <view class="colbf">轴位</view>
+                    </view>
+                </view>
+                <view class="col3">
+                    戴镜视力
+                </view>
+                <view class="col4">
+                    裸眼视力
+                </view>
+            </view>
+            <block wx:for="{{inspect}}" wx:key="{{item.id}}">
+                <view class="row bb2">
+                <view class="col1">
+                    <view class="date">
+                        {{item.check_time}}
+                    </view>
+                    <view class="col1Eye">
+                        <view class="col1EyeT bb">左眼</view>
+                        <view class="col1EyeT">右眼</view>
+                    </view>
+                </view>
+                <view class="col2">
+                    <view class="col2b">
+                        <view class="colbf">{{item.item8}}</view>
+                        <view class="colbf">{{item.item10}}</view>
+                        <view class="colbf">{{item.item12}}</view>
+                    </view>
+                    <view class="col2b">
+                        <view class="colbf">{{item.item7}}</view>
+                        <view class="colbf">{{item.item9}}</view>
+                        <view class="colbf">{{item.item11}}</view>
+                    </view>
+                </view>
+                <view class="col3">
+                    <view class="col3I bb">
+                        {{item.item14}}
+                    </view>
+                    <view class="col3I">
+                        {{item.item13}}
+                    </view>
+                </view>
+                <view class="col4">
+                    <view class="col4I bb">
+                        {{item.item16}}
+                    </view>
+                    <view class="col4I">
+                        {{item.item15}}
+                    </view>
+                </view>
+            </view>
+            </block>
+        </view>
+
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import testMixin from '../mixins/test'
+    import request   from '../mixins/service'
+
+    export default class vision extends wepy.page {
+        config = {
+            navigationBarTitleText: '视力统计'
+        }
+        data = {
+            inspect:[]
+        }
+        methods={
+            changeIndex:function (e) {
+
+            }
+        }
+        mixins = [testMixin]
+
+        onLoad(option){
+            const self = this
+            request('getVisionStats',{id:wepy.getStorageSync('defaultChildId')}).then(res=>{
+                self.inspect = res.data
+                self.$apply()
+                console.log(self.inspect);
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+
+    }
+</script>

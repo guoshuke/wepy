@@ -1,4 +1,8 @@
 <style lang="less">
+    .container{
+        width: 100vw;
+        height: 100vh;
+    }
     view{
         font-size: 14px;
         font-weight: 400;
@@ -94,7 +98,7 @@
         flex: 1;
     }
     .swiper{
-        height: 150px;
+        height: 170px;
         width: 100vw;
     }
     .bg{
@@ -143,7 +147,7 @@
     .year{
         background: url("http://glass.unimker.com/assets/images/b004.png") no-repeat center center;
         background-size: cover;
-        width: 12vw;
+        width: 13vw;
         height: 6vw;
         padding-top: 2rpx;
         box-sizing: border-box;
@@ -197,30 +201,34 @@
         color: #999;
         font-size: 18px;
     }
+    .container2{
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .addFristChild{
+        font-size: 14px;
+        color: #7e7bff;
+        font-weight: 300;
+    }
 </style>
 <template>
-    <view class="container">
-
-        <!--<picker bindchange="bindPickerChange" value="{{index}}" range="{{childrenList}}" range-key="nickname" class="flex1">-->
-            <!--<view class="text">-->
-                <!--{{childrenList[index].nickname}} -->
-                <!--<image class="down" src="{{'../asset/8.png'}}" />-->
-            <!--</view>-->
-        <!--</picker>-->
+    <scroll-view scroll-y class="container" wx:if="{{defaultChildId}}" bindscrolltolower="scrollBottom" bindscrolltoupper="scrollTop">
 
         <view class="topBar" bindtap="show">
-            <view>{{nickname}}</view>
+            <view>{{defaultChildName}}</view>
             <image class="down" src="{{'../asset/8.png'}}" />
         </view>
-        <swiper class="swiper">
+        <swiper class="swiper" bindanimationfinish="changeStore" current="{{currentIndex}}">
             <block wx:for="{{swipeList}}" wx:key="{{item.id}}">
-                <swiper-item class="bg" style="background: url('{{baseUrl+item.logo}}')">
-                    <!--<image src="{{item.imgUrl}}" class="slide-image" width="355" height="150"/>-->
-                    <view class="swiperBottom">
-                        <view class="title">{{item.storename}}</view>
+                <swiper-item class="bg" style="background: url('{{baseUrl+(item.logo||'/assets/images/b004.png')}}')" current-item-id="{{item.id}}">
+                    <view class="swiperBottom" @tap="goStoreDetail" id="{{item.id}}">
+                        <view class="title">{{item.storename||''}}</view>
                         <image class="iconImg" src="../asset/15.png" alt=""/>
                         <view class="address">
-                            {{item.cityarea}}
+                            {{item.cityarea||''}}
                         </view>
                         <image  class="iconImg" src="../asset/13.png" alt=""/>
                     </view>
@@ -229,18 +237,18 @@
         </swiper>
         <view class="inspect">
             <view class="line">
-                <block wx:for="{{inspect}}"  wx:for-index="year" wx:key="key">
-                    <view class="year">{{item[year].year+'年'}}</view>
+                <block wx:for="{{inspect}}"  wx:key="{{index}}">
+                    <view class="year">{{item[0].year+'年'}}</view>
                     <block wx:for="{{item}}" wx:key="h.id" wx:for-item="h">
                         <view class="history">
                             <view class="historyTitle">
                                 <image class="iconImgLeft" src="../asset/24.png" alt=""/>
                                 {{h.mon+'月'+h.day+'日'}}
                             </view>
-                            <view class="historyList">
+                            <view class="historyList" @tap="govVision" data-logId="{{h.id}}">
                                 <view class="listLeft">
-                                    <view class="leftEye">裸眼视力：左眼4.5，右眼4.7</view>
-                                    <view class="rightEye">戴镜视力：左眼1.5，右眼1.7</view>
+                                    <view class="leftEye">裸眼视力：左眼{{h.item14}}，右眼{{h.item13}}</view>
+                                    <view class="rightEye">戴镜视力：左眼{{h.item16}}，右眼{{h.item15}}</view>
                                 </view>
                                 <view class="iconfont icon-left"></view>
                             </view>
@@ -262,7 +270,7 @@
                            <view class="item" @tap="hide" data-id="{{item.id}}" data-nickname="{{item.nickname}}">
                                <image src="{{item.avatarurl}}" class="headerImg"/>
                                <view class="text flex1">{{item.nickname}}</view>
-                               <image wx:if="{{item.id==childId}}" src="../asset/12.png" class="icon_right"/>
+                               <image wx:if="{{item.id==defaultChildId}}" src="../asset/12.png" class="icon_right"/>
                            </view>
                        </view>
                    </repeat>
@@ -274,7 +282,11 @@
                 </view>
             </view>
         </view>
+    </scroll-view>
+    <view class="container container2" wx:if="{{!defaultChildId}}">
+        <view class="addFristChild" @tap="goAddChildren">关联孩子</view>
     </view>
+
 </template>
 
 <script>
@@ -286,20 +298,17 @@
         config = {
             navigationBarTitleText: '眼镜小程序'
         }
-        components = {
 
-        }
-
-        mixins = [testMixin]
+        mixins = [testMixin]//全局变量
 
         data = {
-            childrenList:[],//孩子列表
             swipeList:[],//轮播列表
-            childId:null,
-            nickname:'',
+            currentIndex:0,
             flag:true,//弹层开关
             inspect:[],//孩子检查历史列表
-            isLoad:true//第一次去掉onShow中多次获取childrenList
+            isLoad:true,//第一次去掉onShow中多次获取childrenList
+            page:1,
+            total:11,
         }
 
         computed = {
@@ -316,12 +325,14 @@
                 const self = this
                 var id = e.currentTarget.dataset.id
                 var nickname=e.currentTarget.dataset.nickname
-                if(id!=this.data.childId){
-                    this.childId=id
-                    this.nickname=nickname
-                    wepy.setStorage({key: 'defaultChildId', data:{id: id,nickname:nickname}})
+                if(id!=this.data.defaultChildId){
+                    this.defaultChildId=id
+                    this.defaultChildName=nickname
+                    this.$apply()
+                    wepy.setStorage({key: 'defaultChild', data:{id: id,nickname:nickname}})
+                    self.scrollBottom() //获取视力检查数据
                 }
-
+                debugger
                 this.flag=true
                 this.$apply()
             },
@@ -330,43 +341,51 @@
                 this.$apply()
                 wepy.navigateTo({url: 'addChildren'})
             },
+            goStoreDetail(e){
+                console.log(e);
+                wepy.navigateTo({url: 'storeDetail?id='+e.currentTarget.id})
+            },
+            govVision(e){
+                wepy.navigateTo({url: 'optometry?id='+e.currentTarget.dataset.logid})
+            },
+            changeStore(e){
+                console.log(e);
+                this.storeId=this.data.swipeList[e.detail.current].id
+                this.$apply()
+                wepy.setStorage({key: 'storeId', data: this.data.storeId}) //更新storeId
+                this.scrollBottom() //获取视力检查数据
+            },
 
-
-            agreeGetUser(e) {
-                if (e.detail.userInfo) {
-
-                    let self = this
-                    self.userInfo = e.detail.userInfo
-                    let user =wepy.getStorageSync('userInfo')?wepy.getStorageSync('userInfo').nickName:''
-                    if(!user){
-                        wepy.setStorage({key: 'userInfo', data: self.userInfo})
-
-                        self.$apply()
-                    }
-
-
-                }
-                else {
-                    this.toast('您还未授权')
-                }
-
-
+        }
+        scrollBottom () {
+            if(this.total<this.data.page*10){
+                return
             }
+            this.page=this.data.page+1
+            this.$apply()
+            this.eyesTested(this.page)
+        }
+        scrollTop(){
+            this.page=1
+            this.total=11
+            this.inspect=[]
+            this.$apply()
+            this.eyesTested(this.page)
         }
         relationChild(){
             const self = this
             requestUrl('getChildrenList').then(res =>{
                 if(res.data.length){
                     self.childrenList=res.data
-                    self.nickname = res.data[0].nickname
-                    self.childId=res.data[0].id
-                    self.$apply()
-                    wepy.setStorage({key: 'defaultChildId', data:{id: res.data[0].id,nickname:res.data[0].nickname},success:function () {
-                        self.eyesTested() //获取视力检查数据
-                        self.getStoreList() //获取门店列表
-                    }})
-
-
+                    if(!self.data.defaultChildId){
+                        self.defaultChildName  = res.data[0].nickname
+                        self.defaultChildId=res.data[0].id
+                        self.$apply()
+                        wepy.setStorage({key: 'defaultChild', data:{id: res.data[0].id,nickname:res.data[0].nickname}})
+                    }
+                    wepy.setStorage({key: 'childrenList', data:res.data})
+                    self.eyesTested() //获取视力检查数据
+                    self.getStoreList() //获取门店列表
                 }else {
                     //未关联任何孩子
                     wepy.navigateTo({url:'addChildren'})
@@ -396,39 +415,53 @@
             return returnArr
         }
 
-        eyesTested(){
+        eyesTested(page){
             const self = this
-            requestUrl('getVisionStats',{id:wepy.getStorageSync('defaultChildId')}).then(res=>{
-                self.inspect= this.translateArr(res.data)
-                self.$apply()
-                console.log(self.inspect);
-            }).catch(err=>{
-                console.log(err);
-            })
+            var sendData={id:this.data.defaultChildId,store_id:self.storeId}
+            if(page){
+                sendData.page=page
+            }
+            if(this.data.defaultChildId){
+                requestUrl('getVisionStats',sendData).then(res=>{
+                    self.inspect=  self.inspect.concat(self.translateArr(res.data.rows))
+                    self.total=res.data.total
+                    self.$apply()
+                    console.log(self.inspect);
+                }).catch(err=>{
+                    console.log(err);
+                })
+            }
+
         }
 
         login(code){
             const self = this
-
-            let defaultChildId=  wepy.getStorageSync('defaultChildId').id
             wepy.request({
                 url: 'http://glass.unimker.com/api/login',
                 data: {
                     code: code,
-                    storeId: wepy.getStorageSync('storeId') || 1
+                    storeId: this.data.storeId
                 },
                 method: 'POST',
                 success: function (d) {
                     if (d.statusCode == 200) {
                         var temp = {user_id: d.data.data.user_id, login_token: d.data.data.login_token}
-                        wepy.setStorage({key: 'baseData', data: temp,success:function () {
-                            self.$parent.globalData.baseData.user_id = d.data.data.user_id
-                            self.$parent.globalData.baseData.login_token = d.data.data.login_token
-                            self.$apply()
 
-                            if(!defaultChildId||defaultChildId=={}){
-                                self.relationChild() //关联孩子
+                        let data=d.data.data
+                        console.log(data);
+                        if(data.avatarurl){
+                            let userInfo = {
+                                avatarUrl:self.baseUrl+data.avatarurl,
+                                nickName:data.nickname,
+                                mobile:data.mobile,
+                                birthday:data.birthday
                             }
+                            wepy.setStorage({key: 'userInfo', data: userInfo,success:function () {
+                            }})
+                        }
+
+                        wepy.setStorage({key: 'baseData', data: temp,success:function () {
+                            self.relationChild() //关联孩子
                         }})
 
 
@@ -440,35 +473,16 @@
             })
         }
 
-        onShow(){
-            //this.relationChild()
-            const self = this
-            if(this.data.isLoad) {
-                this.isLoad = false
-            }else {
-                requestUrl('getChildrenList').then(res =>{
-                    if(res.data.length){
-                        self.childrenList=res.data
-                        self.childId=wepy.getStorageSync('defaultChildId').id
-                        self.nickname = res.data.filter(c => c.id==self.childId)[0].nickname
-                        self.$apply()
-                    }else {
-                        //未关联任何孩子
-                        //wepy.navigateTo({url:'addChildren'})
-                    }
 
-
-                }).catch(err =>{
-                    //console.log(err);
-                })
-            }
-        }
         getStoreList(){
             const self =this
             requestUrl('getStoreList').then(res=>{
-                console.log(res);
+
                 if(res.code==1){
                     self.swipeList=res.data
+                    self.currentIndex= res.data.findIndex(function (item) {
+                        return item.id == self.storeId-0
+                    })
                     self.$apply()
 
                 }
@@ -478,30 +492,31 @@
         }
 
         onLoad(option) {
+
             console.log('index load');
             let self = this
-            let baseData = wepy.getStorageSync('baseData')
+            wepy.showToast({title: 'storeId是 '+option.scene})
+            wx.checkSession({
+                success: function(res){
+                    //获取列表
+                    self.relationChild()
+                },
+                fail: function(res){
 
-
-            if (baseData && baseData != {}) {
-                self.childId=wepy.getStorageSync('defaultChildId')
-                self.relationChild()
-            } else {
-                wepy.login({
-                    success: function (res) {
-                        console.log('获取成功 code======>', res.code);
-                        self.login(res.code)
-                    }
-                })
-            }
-
-
-
-            if(option.storeId){
-
-                wepy.setStorage({key: 'storeId', data: option?option.storeId:'1'}) //进来设置微信的storeId
+                    console.log("需要重新登录");
+                    wepy.login({
+                        success: function (res) {
+                            console.log('获取成功 code======>', res.code);
+                            self.login(res.code)
+                        }
+                    })
+                }
+            })
+           
+            if(option.scene){
+                this.storeId=option.scene
+                wepy.setStorage({key: 'storeId', data: option.scene}) //进来设置微信的storeId
             }else {
-
                 wepy.setStorage({key: 'storeId',data:'1'}) //进来设置微信的storeId
             }
 

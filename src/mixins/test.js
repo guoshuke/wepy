@@ -4,7 +4,12 @@ export default class testMixin extends wepy.mixin {
     data = {
         mixin: 'This is mixin data.',
         baseUrl: 'http://glass.unimker.com',
-        defaultChildId:wepy.getStorageSync('defaultChildId')
+        defaultChildId:wx.getStorageSync('defaultChild').id||null,
+        defaultChildName:wx.getStorageSync('defaultChild').nickname||'',
+        storeId:wx.getStorageSync('storeId')||null,
+        childrenList:wx.getStorageSync('childrenList')||[],
+        userInfo:wx.getStorageSync('userInfo')||{},
+        baseData:wx.getStorageSync('baseData')||{}
     }
     methods = {
         tap() {
@@ -17,16 +22,10 @@ export default class testMixin extends wepy.mixin {
 
     onShow() {
         console.log('mixin onShow')
+
     }
 
-    onLoad() {
+    onLoad(option) {
         console.log('mixin onLoad')
-        wepy.getStorage({
-            key: 'userInfo', complete: function (data) {
-                if (data.data) {
-                    this.globalData.userInfo = data.data
-                }
-            }
-        })
     }
 }

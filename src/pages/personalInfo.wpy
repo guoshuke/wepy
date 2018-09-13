@@ -71,7 +71,6 @@
 
                                      console.log(res.data);
                                      wepy.setStorage({key: 'userInfo', data: res.data,success:function () {
-                                         debugger
                                      }})
                                  }
                              }
@@ -93,6 +92,21 @@
                 this.nickName=e.detail.value
                 request('setNickName',{nickName:this.nickName}).then(res=>{
                     console.log(res);
+                    if(res.code==1){
+                        wepy.getStorage({
+                            key: 'userInfo', complete: function (res) {
+                                if (res.data) {
+                                    res.data.nickName=e.detail.value
+
+                                    console.log(res.data);
+                                    wepy.setStorage({key: 'userInfo', data: res.data,success:function () {
+                                        debugger
+                                    }})
+                                }
+                            }
+                        })
+                    }
+
                 }).catch(err=>{
                     console.log(err);
                     wx.showToast({title: '发生错误',icon:'none'})

@@ -1,4 +1,72 @@
 
-    <view class="container">
+    <scroll-view scroll-y class="container"  wx:if="{{defaultChildId}}" bindscrolltolower="scrollBottom" bindscrolltoupper="scrollTop">
 
+        <view class="topBar" bindtap="show">
+            <view>{{defaultChildName}}</view>
+            <image class="down" src="{{'../asset/8.png'}}"/>
+        </view>
+        <swiper class="swiper" bindanimationfinish="changeStore" current="{{currentIndex}}">
+            <block wx:for="{{swipeList}}" wx:key="{{item.id}}">
+                <swiper-item class="bg" style="background: url('{{baseUrl+(item.logo||'/assets/images/b004.png')}}')" current-item-id="{{item.id}}">
+                    <view class="swiperBottom" bindtap="goStoreDetail" id="{{item.id}}">
+                        <view class="title">{{item.storename||''}}</view>
+                        <image class="iconImg" src="../asset/15.png" alt=""/>
+                        <view class="address">
+                            {{item.cityarea||''}}
+                        </view>
+                        <image class="iconImg" src="../asset/13.png" alt=""/>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+        <view class="inspect">
+            <view class="line">
+                <block wx:for="{{inspect}}" wx:key="{{index}}">
+                    <view class="year">{{item[0].year+'年'}}</view>
+                    <block wx:for="{{item}}" wx:key="h.id" wx:for-item="h">
+                        <view class="history">
+                            <view class="historyTitle">
+                                <image class="iconImgLeft" src="../asset/24.png" alt=""/>
+                                {{h.mon+'月'+h.day+'日'}}
+                            </view>
+                            <view class="historyList" bindtap="govVision" data-logId="{{h.id}}">
+                                <view class="listLeft">
+                                    <view class="leftEye">裸眼视力：左眼{{h.item14}}，右眼{{h.item13}}</view>
+                                    <view class="rightEye">戴镜视力：左眼{{h.item16}}，右眼{{h.item15}}</view>
+                                </view>
+                                <view class="iconfont icon-left"/>
+                            </view>
+                        </view>
+                    </block>
+                </block>
+            </view>
+        </view>
+
+
+
+        <view class="modal-box" hidden="{{flag}}">
+
+            <view class="modal-body">
+
+                <view class="modal-content mt25">
+                   <block wx:for="{{childrenList}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+                       <view class="list">
+                           <view class="item" bindtap="hide" data-id="{{item.id}}" data-nickname="{{item.nickname}}">
+                               <image src="{{item.avatarurl}}" class="headerImg"/>
+                               <view class="text flex1">{{item.nickname}}</view>
+                               <image wx:if="{{item.id==defaultChildId}}" src="../asset/12.png" class="icon_right"/>
+                           </view>
+                       </view>
+                   </block>
+                    <view class="list">
+                        <view class="item addChild" bindtap="goAddChildren">
+                            <view class="text flex1">+ 添加孩子</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </scroll-view>
+    <view class="container container2"  wx:if="{{!defaultChildId}}">
+        <view class="addFristChild" bindtap="goAddChildren">关联孩子</view>
     </view>

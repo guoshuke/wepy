@@ -26,6 +26,11 @@
                 color: #fff;
                 font-size: 16px;
                 max-width: 24vw;
+                text-align: left;
+                line-height: 50rpx;
+                &::after {
+                    border: 0;
+                }
             }
             .itemText {
                 font-size: 14px;
@@ -96,12 +101,12 @@
         <view class="list">
             <view class="title">问卷调查</view>
             <view class="items">
-                <view class="item img20" @tap="questionnaire">
+                <button class="item img20" bindgetuserinfo="questionnaire"  open-type="getUserInfo">
                     <view class="itemTitle">视疲劳症状问卷调查表</view>
-                </view>
-                <view class="item img21" @tap="student">
+                </button>
+                <button class="item img21" bindgetuserinfo="student" open-type="getUserInfo">
                     <view class="itemTitle">学生用眼睛情况问卷调查表</view>
-                </view>
+                </button>
             </view>
         </view>
         <view class="list">
@@ -132,60 +137,68 @@
         data = {}
 
         methods = {
-            agreeGetUser(e) {
-                let self = this
-                if (e.detail.userInfo) {
-                    let self = this
-                    self.userInfo = e.detail.userInfo
-                    //http://glass.unimker.com/api/mobileBind
-                    wepy.getStorage({
-                        key: 'baseData', complete: function (data) {
-                            if (data.data) {
-                                wx.request({
-                                    url: self.baseUrl + '/api/mobileBind',
 
-                                    method: 'POST',
-//                  header: {
-//                     'content-type': 'application/x-www-form-urlencoded'
-//                     // 'content-type': 'application/json'
-//                  },
-                                    data: {
-                                        "code": '',
-                                        "code_token": '',
-                                        "user_id": 7 || data.data.user_id,
-                                        "login_token": 'd55059a4cf2b980a2145af9d3cfa661d' || data.data.login_token,
-                                        "mobile": '',
-                                        "nickname": encodeURIComponent(self.userInfo.nickName + '🐸🐸'),
-                                        "avatarurl": self.userInfo.avatarUrl,
-                                        "sex": self.userInfo.gender
-
-                                    },
-                                    success: function (d) {
-                                        console.log(d);
-                                        //self.$apply()
-                                        wepy.setStorage({key: 'userInfo', data: self.userInfo})
-                                    }
-                                })
-                            }
-                        }
-                    })
-
-
-                    console.log('授权成功======>', e.detail.userInfo); //登录授权信息
-                    self.toast('授权成功')
-                } else {
-                    console.log('授权取消');
-                    self.toast('您还未授权')
-                }
-            },
             goTest(e){
                 wepy.navigateTo({url:'examine?id=2'})
             },
-            questionnaire(){
-                wepy.navigateTo({url:'questionnaire?code=exam2&needSum=true'})
+            questionnaire(e){
+                let self = this
+                if (e.detail.userInfo) {
+                    let self = this
+                    if(!self.userInfo.nickName) {
+                        let sendData={
+                            nickName:self.userInfo.nickName,
+                            avatarUrl:self.userInfo.avatarUrl,
+                            sex:self.userInfo.gender
+                        }
+                        request('authBind',sendData).then(res=>{
+                            console.log(res);
+                            debugger
+                            if(res.code1!=1){
+                                wx.showToast({title: res.message,icon:'none'})
+                            }
+                        }).catch(err=>{
+                            console.log(err);
+                        })
+                        self.userInfo = e.detail.userInfo
+                        wepy.setStorage({key: 'userInfo', data: self.userInfo})
+                    }
+
+                    wepy.navigateTo({url:'questionnaire?code=exam2&needSum=true'})
+                } else {
+                    console.log('取消授权');
+                    wx.showToast({title: '取消授权',icon:'none'})
+                }
+
             },
-            student(){
-                wepy.navigateTo({url:'questionnaire?code=exam1'})
+            student(e){
+                let self = this
+                if (e.detail.userInfo) {
+                    let self = this
+                    if(!self.userInfo.nickName) {
+                        let sendData={
+                            nickName:self.userInfo.nickName,
+                            avatarUrl:self.userInfo.avatarUrl,
+                            sex:self.userInfo.gender
+                        }
+                        request('authBind',sendData).then(res=>{
+                            console.log(res);
+                            debugger
+                            if(res.code1!=1){
+                                wx.showToast({title: res.message,icon:'none'})
+                            }
+                        }).catch(err=>{
+                            console.log(err);
+                        })
+                        self.userInfo = e.detail.userInfo
+                        wepy.setStorage({key: 'userInfo', data: self.userInfo})
+                    }
+                    wepy.navigateTo({url:'questionnaire?code=exam1'})
+
+                } else {
+                    console.log('取消授权');
+                    wx.showToast({title: '取消授权',icon:'none'})
+                }
             },
             achromatopsia(){
                 wepy.navigateTo({url:'examine?id=4'})
@@ -198,19 +211,10 @@
             }
         }
 
-
-        onShow(){
-
-        }
         onLoad() {
-            if(!wx.getStorageSync('defaultChildId')){
+            if(!wx.getStorageSync('defaultChild')){
                 wepy.navigateTo({url:'addChildren'})
             }
-            request('getTypelist').then(res=>{
-                console.log(res);
-            }).catch(err=>{
-                console.log(err);
-            })
         }
     }
 </script>

@@ -2,7 +2,7 @@
     <view class="container">
         <button class="userInfo" bindgetuserinfo="goDetail" open-type="getUserInfo">
             <open-data wx:if="{{!userInfo.avatarUrl}}" type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
-            <open-data wx:if="{{!userInfo.nickName}}" type="userNickName" id="userName" class="userinfo-nickname"></open-data>
+            <open-data wx:if="{{!userInfo.nickName}}" type="userNickName mt0" id="userName" class="userinfo-nickname"></open-data>
             <image wx:if="{{userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="userinfo-avatar"></image>
             <view wx:if="{{userInfo.nickName}}" class="userinfo-nickname mt0">{{userInfo.nickName}}</view>
         </button>
@@ -12,7 +12,7 @@
             </view>
             <view class="scroll">
                 <scroll-view scroll-x class="row">
-                    <block wx:for='{{list}}'>
+                    <block wx:for='{{childrenList}}' wx:key="{{item.id}}">
                         <div class="item" data-index="{{item.id}}" @tap="goArchives">
                             <image src='{{item.avatarurl}}' class="childrenAvatar"/>
                             <view class="nickname">{{item.nickname}}</view>
@@ -23,7 +23,6 @@
                     </view>
                 </scroll-view>
             </view>
-            <toast/>
         </view>
         <view class="last">
             <view class="lastItem" @tap="goAboutUs">
@@ -41,64 +40,24 @@
 </template>
 <script>
     import wepy from 'wepy'
-    import Toast from 'wepy-com-toast'
     import testMixin from '../mixins/test'
     import request from '../mixins/service'
+    import g        from '../mixins/global'
 
     export default class my extends wepy.page {
         config = {
             navigationBarTitleText: '个人中心'
         }
-        data = {
-            list: [],
-            userInfo: {
-                nickName: '',
-                avatarUrl: ''
-            },
-            id: '',
-        }
+
         mixins = [testMixin]
 
         components = {
-            toast: Toast
-        }
 
-        getUserInfo() {
-            let self = this
-            wepy.getStorage({
-                key: 'userInfo', complete: function (data) {
-                    if (data.data) {
-                        self.userInfo = data.data
-                    }
-                }
-            })
-        }
-
-        getChildrenList() {
-            const self = this
-            request(
-                'getChildrenList',
-            ).then(res => {
-                console.log(res);
-                self.data.list = self.list = res.data
-                if(self.list.length){
-                    self.data.id = res.data[0]['id']
-                    self.setData({list: res.data})
-                }
-                self.$apply()
-
-            }).catch(err => {
-                console.log(err);
-            })
         }
 
         onShow() {
-            this.getChildrenList()
-            this.getUserInfo()
-        }
+            this.$parent.getGlobalData(this)
 
-        onLoad() {
-            this.getUserInfo()
         }
 
         goArchives(e) {
@@ -108,22 +67,32 @@
         }
 
         methods = {
-            goexamine() {
-                wepy.navigateTo({url: 'examine?id=0'})
-            },
             addChildren(e) {
                 wepy.navigateTo({url: 'addChildren'})
             },
 
-
             goDetail(e) {
                 if (e.detail.userInfo) {
-
                     let self = this
-
-                    let user = wepy.getStorageSync('userInfo') ? wepy.getStorageSync('userInfo').nickName : ''
+                    let user = this.data.userInfo.nickName
+                    debugger
                     if (!user) {
+
                         self.userInfo = e.detail.userInfo
+                        let sendData={
+                            nickName:self.userInfo.nickName,
+                            avatarUrl:self.userInfo.avatarUrl,
+                            sex:self.userInfo.gender
+                        }
+                        request('authBind',sendData).then(res=>{
+                            console.log(res);
+                            debugger
+                            if(res.code1!=1){
+                                wx.showToast({title: res.message,icon:'none'})
+                            }
+                        }).catch(err=>{
+                            console.log(err);
+                        })
                         self.$apply()
                         wepy.setStorage({key: 'userInfo', data: self.userInfo, success: function () {
                                 wepy.navigateTo({url: 'personalInfo'})
@@ -134,7 +103,7 @@
                     }
                 }
                 else {
-                    this.toast('您还未授权')
+                    wx.showToast({title: '取消授权',icon:'none'})
                 }
 
 

@@ -29,15 +29,6 @@
                 </div>
             </block>
 
-
-            <div class="list-ul">
-                <div class="item">
-                    <div class="col-3 leftTitle">146</div>
-                    <div class="col-3 leftTitle">41</div>
-                    <div class="col-4 leftTitle">2018-08-20</div>
-                </div>
-            </div>
-
         </scroll-view>
         <div class="last">
             <div class="add" @tap="goAddHeightOrWeight">添加</div>
@@ -104,7 +95,6 @@
 
         onLoad(option) {
             this.id=option.id
-            this.getRecordSelf()
         }
 
     }

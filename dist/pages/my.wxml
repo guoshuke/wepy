@@ -1,52 +1,39 @@
 
-  <view class="container _caa17ee">
-    <view class="userInfo _caa17ee" bindtap="goDetail">
-      <open-data type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar _caa17ee"/>
-      <open-data type="userNickName" id="userName" class="userinfo-nickname _caa17ee"/>
-    </view>
-    <view class="myChildren _caa17ee">
-      <view class="myChildrenTitle padding3 _caa17ee">
-        我的孩子
-      </view>
-      <view class="scroll _caa17ee">
-        <scroll-view scroll-x class="row _caa17ee">
-          <block class="item _caa17ee" wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
-            <view class="item _caa17ee" bindtap="addChildren" data-id="{{item.id}}">
-              <image src="{{item.avatarurl}}" class="childrenAvatar _caa17ee"/>
-              <!--<text>{{userInfo.nickName+item.name}}</text>-->
+    <view class="container _4afdeb5">
+        <button class="userInfo _4afdeb5" bindgetuserinfo="goDetail" open-type="getUserInfo">
+            <open-data  wx:if="{{!userInfo.avatarUrl}}" type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar _4afdeb5"/>
+            <open-data  wx:if="{{!userInfo.nickName}}" type="userNickName mt0" id="userName" class="userinfo-nickname _4afdeb5"/>
+            <image  wx:if="{{userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="userinfo-avatar _4afdeb5"/>
+            <view wx:if="{{userInfo.nickName}}" class="userinfo-nickname mt0 _4afdeb5">{{userInfo.nickName}}</view>
+        </button>
+        <view class="myChildren _4afdeb5">
+            <view class="myChildrenTitle padding3 _4afdeb5">
+                我的孩子
             </view>
-          </block>
-          <view class="item _caa17ee" bindtap="addChildren">
-            <view class="add _caa17ee">+</view>
-          </view>
-        </scroll-view>
-      </view>
-      
-    <view class="wetoast {{$toast$reveal ? 'wetoast_show' : ''}} _caa17ee">
-        <view class="wetoast__mask"/>
-        <view class="wetoast__bd" animation="{{$toast$animationData}}">
-            <block  wx:if="{{$toast$img}}">
-                <view class="wetoast__bd__img {{$toast$imgClassName || ''}}">
-                    <image class="wetoast__bd__img_desc" src="{{$toast$img}}" mode="{{$toast$imgMode || 'scaleToFill'}}"/>
-                </view>
-            </block>
-            <block  wx:if="{{$toast$title}}">
-                <view class="wetoast__bd__title {{$toast$titleClassName || ''}}">{{$toast$title}}</view>
-            </block>
+            <view class="scroll _4afdeb5">
+                <scroll-view scroll-x class="row _4afdeb5">
+                    <block wx:for="{{childrenList}}" wx:key="{{item.id}}" class="_4afdeb5">
+                        <div class="item _4afdeb5" data-index="{{item.id}}" bindtap="goArchives">
+                            <image src="{{item.avatarurl}}" class="childrenAvatar _4afdeb5"/>
+                            <view class="nickname _4afdeb5">{{item.nickname}}</view>
+                        </div>
+                    </block>
+                    <view class="item _4afdeb5" bindtap="addChildren">
+                        <view class="add _4afdeb5">+</view>
+                    </view>
+                </scroll-view>
+            </view>
+        </view>
+        <view class="last _4afdeb5">
+            <view class="lastItem _4afdeb5" bindtap="goAboutUs">
+                <text class="about _4afdeb5">关于我们</text>
+                <text class="iconfont icon-left _4afdeb5"/>
+            </view>
+        </view>
+        <view class="last _4afdeb5">
+            <view class="lastItem _4afdeb5">
+                <text class="about _4afdeb5">版本信息</text>
+                <text class="version _4afdeb5">V1.0</text>
+            </view>
         </view>
     </view>
-
-    </view>
-    <view class="last _caa17ee">
-      <view class="lastItem _caa17ee" bindtap="getChildrenList">
-        <text class="about _caa17ee">关于我们</text>
-        <text class="iconfont icon-left _caa17ee"/>
-      </view>
-    </view>
-    <view class="last _caa17ee">
-      <view class="lastItem _caa17ee" bindtap="goExamination"><!--goHeightOrWeight-->
-        <text class="about _caa17ee">版本信息</text>
-        <text class="version _caa17ee">V1.0</text>
-      </view>
-    </view>
-  </view>

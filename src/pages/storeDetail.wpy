@@ -1,0 +1,184 @@
+<template>
+    <view class="container">
+        <div class="top">
+            <div class="bg" style="background: url('{{allData.logo}}')">
+                <div class="bgBottom">{{allData.name}}</div>
+            </div>
+            <div class="list">
+                <div class="item" @tap="goLocation">
+                    <image class="iconAddress" src="../asset/27.png" alt=""/>
+                    <div class="text flex1">{{allData.cityarea}}</div>
+                    <image src="../asset/29.png" class="iconGo" alt=""/>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item">
+                    <image class="iconAddress" src="../asset/26.png" alt=""/>
+                    <div class="text flex1">联系电话</div>
+                    <div class="text colorBlue" @tap="callPhone">{{allData.tel}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="sellerInfo">
+            <div class="sellerTitle">商家信息</div>
+            <div class="sellBar">
+                营业时间：{{allData.business_hour}}
+            </div>
+            <div class="sellBar">
+                <div class="title">简　　介：</div>
+                <div class="contentArea">
+                    {{allData.desc+'fshalhasljalskasaslflasjglasjgljaslgj fkalsakljasflkflasjflas alksgakslglsakflas falskfsklajflaslfasl faslkfsalkflasjalsjlasflfasklfal flksafalk'}}
+                </div>
+            </div>
+        </div>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import testMixin from '../mixins/test'
+    import request   from '../mixins/service'
+
+    export default class storeDetail extends wepy.page {
+        config = {
+            navigationBarTitleText: '详情'
+        }
+        data = {
+            allData:{}
+        }
+        mixins = [testMixin]
+
+        methods={
+            callPhone:function () {
+                wx.makePhoneCall({
+                    phoneNumber: this.data.allData.tel //仅为示例，并非真实的电话号码
+                })
+            },
+            goLocation(){
+//                wx.getLocation({
+//                    type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+//                    success: function(res) {
+//
+//                    }
+//                })
+                var latitude = this.data.allData.lat
+                var longitude = this.data.allData.lng
+                wx.openLocation({
+                    latitude: latitude,
+                    longitude: longitude,
+                    scale: 28
+                })
+            }
+        }
+
+        onLoad(option){
+            const self = this
+            request('getStoreDetail',{id:option.id}).then(res=>{
+                console.log(res.data);
+                res.data.logo=self.baseUrl+res.data.logo
+                self.allData=res.data
+                self.$apply()
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+
+    }
+</script>
+<style lang="less" scoped>
+    view{
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .container{
+        background-color: #efefef;
+        justify-content: inherit;
+        height: 100vh;
+    }
+    .top{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        background-color: #fff;
+    }
+    .bg{
+        height: 170px;
+        width: 100vw;
+        background: url("http://glass.unimker.com/assets/images/photo001.png") no-repeat center center;
+        background-size: cover;
+        display: flex;
+        align-items: flex-end;
+    }
+    .bgBottom{
+        display: flex;
+        flex-direction: row;
+        width: 100vw;
+        align-items: center;
+        color: #fff;
+        padding: 0 4vw;
+        box-sizing: border-box;
+        margin-bottom: 1vw;
+        font-size: 20px;
+    }
+    .iconAddress{
+        width: 25rpx;
+        height: 30rpx;
+    }
+    .iconGo{
+        width: 30rpx;
+        height: 44rpx;
+    }
+    .text{
+        color: #666;
+        margin-left: 20rpx;
+        font-size: 13px;
+    }
+    .list {
+        width: 100vw;
+        display: flex;
+        background-color: #fff;
+        box-sizing: border-box;
+        padding-left: 3vw;
+        min-height: 8vh;
+    }
+
+    .item {
+        width: 97vw;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 3vw;
+        padding-left: 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f3f3f3;
+    }
+
+    .flex1 {
+        flex: 1
+    }
+    .colorBlue{
+        color: #4143ff;
+    }
+    .sellerInfo{
+        width: 100vw;
+        margin-top: 25rpx;
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        padding: 4vw;
+        box-sizing: border-box;
+    }
+    .sellerTitle{
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 30rpx;
+    }
+    .sellBar{
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 30rpx;
+        display: flex;
+        flex-direction: row;
+    }
+    .contentArea{flex: 1}
+</style>
