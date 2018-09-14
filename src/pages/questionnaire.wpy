@@ -76,7 +76,7 @@
                         console.log(res);
                         if(res.code==1){
                             wepy.showToast({title: '提交成功'})
-                            debugger
+
                             setTimeout(function () {
                                 wepy.navigateTo({url:'examination?score='+res.data+'&code='+self.data.code})
                             },1500)

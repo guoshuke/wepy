@@ -54,7 +54,7 @@
         </div>
         <canvas canvas-id="myCanvas" class="opacity0"/>
         <div class="last">
-            <div class="add" bindtap="addChildren">{{childrenId ? '更新' : '添加'}}</div>
+            <button class="add" bindgetuserinfo="addChildren" open-type="getUserInfo">{{childrenId ? '更新' : '添加'}}</button>
             <div class="{{childrenId?'delete':'displayNone'}}" bindtap="deleteChildren">删除</div>
         </div>
 

@@ -75,7 +75,7 @@
                 if (e.detail.userInfo) {
                     let self = this
                     let user = this.data.userInfo.nickName
-                    debugger
+
                     if (!user) {
 
                         self.userInfo = e.detail.userInfo
@@ -86,7 +86,7 @@
                         }
                         request('authBind',sendData).then(res=>{
                             console.log(res);
-                            debugger
+
                             if(res.code1!=1){
                                 wx.showToast({title: res.message,icon:'none'})
                             }

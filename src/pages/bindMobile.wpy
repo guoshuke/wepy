@@ -65,10 +65,10 @@
                 if(!sendData.code){
                     wx.showToast({title:'请输入验证码',icon:'none'})
                 }
-                debugger
+
                 request('mobileBind', sendData).then(f => {
                     console.log('code=========>' + f);
-                    debugger
+
                     if(f.code!=1){
                         wx.showToast({title:f.message,icon:'none'})
                     }else {
@@ -94,7 +94,7 @@
                             console.log('开始计时');
                             self.code_token=res.data.code_token
                             self.$apply()
-                            debugger
+
                             var s = setInterval(() => {
                                 self.timer()
                                 //console.log('剩余 ' + (time - noTime) + 's');

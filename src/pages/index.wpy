@@ -332,7 +332,7 @@
                     wepy.setStorage({key: 'defaultChild', data:{id: id,nickname:nickname}})
                     self.scrollBottom() //获取视力检查数据
                 }
-                debugger
+
                 this.flag=true
                 this.$apply()
             },

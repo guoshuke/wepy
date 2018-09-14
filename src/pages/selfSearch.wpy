@@ -153,7 +153,7 @@
                         }
                         request('authBind',sendData).then(res=>{
                             console.log(res);
-                            debugger
+
                             if(res.code1!=1){
                                 wx.showToast({title: res.message,icon:'none'})
                             }
@@ -163,8 +163,12 @@
                         self.userInfo = e.detail.userInfo
                         wepy.setStorage({key: 'userInfo', data: self.userInfo})
                     }
+                    if(!wx.getStorageSync('defaultChild')){
+                        wepy.navigateTo({url:'addChildren'})
+                    }else {
 
-                    wepy.navigateTo({url:'questionnaire?code=exam2&needSum=true'})
+                        wepy.navigateTo({url: 'questionnaire?code=exam2&needSum=true'})
+                    }
                 } else {
                     console.log('取消授权');
                     wx.showToast({title: '取消授权',icon:'none'})
@@ -183,7 +187,7 @@
                         }
                         request('authBind',sendData).then(res=>{
                             console.log(res);
-                            debugger
+
                             if(res.code1!=1){
                                 wx.showToast({title: res.message,icon:'none'})
                             }
@@ -193,7 +197,11 @@
                         self.userInfo = e.detail.userInfo
                         wepy.setStorage({key: 'userInfo', data: self.userInfo})
                     }
-                    wepy.navigateTo({url:'questionnaire?code=exam1'})
+                    if(!wx.getStorageSync('defaultChild')){
+                        wepy.navigateTo({url:'addChildren'})
+                    }else {
+                        wepy.navigateTo({url: 'questionnaire?code=exam1'})
+                    }
 
                 } else {
                     console.log('取消授权');

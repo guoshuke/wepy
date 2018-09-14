@@ -100,7 +100,7 @@
 
                                     console.log(res.data);
                                     wepy.setStorage({key: 'userInfo', data: res.data,success:function () {
-                                        debugger
+
                                     }})
                                 }
                             }

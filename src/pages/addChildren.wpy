@@ -60,7 +60,7 @@
         </div>
         <canvas canvas-id='myCanvas' class="opacity0"></canvas>
         <div class="last">
-            <div class="add" @tap="addChildren">{{childrenId ? '更新' : '添加'}}</div>
+            <button class="add" bindgetuserinfo="addChildren"  open-type="getUserInfo">{{childrenId ? '更新' : '添加'}}</button>
             <div class="{{childrenId?'delete':'displayNone'}}" @tap="deleteChildren">删除</div>
         </div>
 
@@ -86,7 +86,7 @@
             avatarUrl: '',
             height: null,
             weight: null,
-
+            gender:wepy.getStorageSync('defaultChild').gender,
         }
 
         mixins = [testMixin]
@@ -114,52 +114,13 @@
             },
 
 
-            addChildren() {
-                let sendData = {
-                    avatar: this.data.avatarUrl,
-                    nickname: this.data.nickName,
-                    sex: this.data.index,
-                    birthday: this.data.date,
-                    height: this.data.height,
-                    weight: this.data.weight
-                }
-                if (this.data.childrenId) {
-                    sendData.id = this.data.childrenId
-
-                }
-                const self = this
-                request('addChildren', sendData).then((res) => {
-                    console.log(res);
-                    if (res.code == 1) {
-                        wepy.showToast({title: res.message})
-                        debugger
-                        if (!self.data.childrenId) {
-                            wepy.setStorage({key: 'defaultChildId', data: {id: res.data.id,nickname:res.data.nickname}})
-                        }
-
-                        setTimeout(function () {
-                            wepy.navigateBack({
-                                delta: 1
-                            })
-                        }, 1500)
-                    } else {
-                        wepy.showToast({title: res.message, icon: 'none'})
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                    wepy.showToast({title: err.message, icon: 'none'})
-                })
-
-
-            },
-
             deleteChildren() {
                 const self = this
-                let defaultChildId = wepy.getStorageSync('defaultChildId')
-//                if(defaultChildId.id==this.data.childrenId){
-//                    wx.showToast({title:'不能删除默认的孩子',icon:'none'})
-//                    return
-//                }
+                let defaultChildId = wepy.getStorageSync('defaultChildId').id
+                if(defaultChildId.id==this.data.childrenId){
+                    wx.showToast({title:'不能删除默认的孩子',icon:'none'})
+                    return
+                }
                 wx.showModal({
                     title: '删除提示', content: '确认删除孩子', success: function (res) {
                         if (res.confirm) {
@@ -208,7 +169,6 @@
 
                                     if (platform === 'ios') {
                                         // 兼容处理：ios获取的图片上下颠倒
-                                        wx.showToast({title: '我执行了2'})
 
                                         res = self.reverseImgData(res)
                                     }
@@ -229,7 +189,7 @@
 
                                 },
                                 fail(res) {
-                                    wx.showToast({title: '我执行了3'})
+                                    wx.showToast({title: '图片编译错误',icon:'none'})
 
                                     console.log(res)
                                 },
@@ -247,7 +207,7 @@
 //            success:function (temp) {
 //              if(temp.tempFilePaths.length){
 //                var tempFilePaths = temp.tempFilePaths
-//                debugger
+//                
 //                wx.getImageInfo({
 //                  src:tempFilePaths[0],
 //                  success:function (res) {
@@ -260,16 +220,16 @@
 //                  method: 'GET',
 //                  responseType: 'arraybuffer',
 //                  success: function (res) {
-//                    debugger
+//                    
 //                    var base64 = wx.arrayBufferToBase64(res.data);
-//                    debugger
+//                    
 //                    self.setData({
 //                      avatarUrl: 'data:image/jpg;base64,' + base64
 //                    })
 //                  }
 //                });
 //
-//                debugger
+//                
 //
 //
 //
@@ -289,6 +249,67 @@
 //          })
 //        }
         }
+
+        addChildren(e) {
+            let self = this
+            
+            if(!e.detail.userInfo){
+                wx.showToast({title: '需要您的授权',icon:'none'})
+                return
+            }
+            let sendData = {
+                avatar: this.data.avatarUrl,
+                nickname: this.data.nickName,
+                sex: this.data.index,
+                birthday: this.data.date,
+                height: this.data.height,
+                weight: this.data.weight
+            }
+            if (this.data.childrenId) {
+                sendData.id = this.data.childrenId
+
+            }
+            if(!wx.getStorageSync('userInfo').nickName){
+                let sendUserInfoData={
+                    nickName:self.userInfo.nickName,
+                    avatarUrl:self.userInfo.avatarUrl,
+                    sex:self.userInfo.gender
+                }
+                request('authBind',sendUserInfoData).then(res=>{
+                    console.log(res);
+                    
+                    if(res.code1!=1){
+                        wx.showToast({title: res.message,icon:'none'})
+                    }
+                }).catch(err=>{
+                    console.log(err);
+                })
+            }
+            request('addChildren', sendData).then((res) => {
+                console.log(res);
+                if (res.code == 1) {
+                    wepy.showToast({title: res.message})
+                    
+                    if (!self.data.childrenId) {
+                        wepy.setStorage({key: 'defaultChildId', data: {id: res.data.id,nickname:res.data.nickname}})
+                    }
+
+                    setTimeout(function () {
+                        wepy.navigateBack({
+                            delta: 1
+                        })
+                    }, 1500)
+                } else {
+                    wepy.showToast({title: res.message, icon: 'none'})
+                }
+            }).catch((err) => {
+                console.log(err);
+                wepy.showToast({title: err.message, icon: 'none'})
+            })
+
+
+        }
+
 
         reverseImgData(res) {
             var w = res.width
@@ -442,7 +463,7 @@
         line-height: 40px;
         border-radius: 40px;
         /*position: absolute;*/
-        left: 15vw;
+        /*left: 15vw;*/
         font-size: 16px;
         font-weight: 300;
         background: linear-gradient(to right, #32ECAC, #01C1D7);

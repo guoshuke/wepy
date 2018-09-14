@@ -111,7 +111,7 @@
                     wx.showToast({title:'至少上传一张图片',icon:'none'})
                     return
                 }
-                debugger
+
                 request('addHealthRecordSelf',sendData).then(res=>{
                     if(res.code==1){
                         wx.showToast({title:res.message})
