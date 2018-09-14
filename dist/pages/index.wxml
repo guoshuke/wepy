@@ -7,7 +7,7 @@
         </view>
         <swiper class="swiper" bindanimationfinish="changeStore" current="{{currentIndex}}">
             <block wx:for="{{swipeList}}" wx:key="{{item.id}}">
-                <swiper-item class="bg" style="background: url('{{baseUrl+(item.logo||'/assets/images/b004.png')}}')" current-item-id="{{item.id}}">
+                <swiper-item class="bg" style="background: url({{baseUrl+(item.logo)}}) no-repeat center center;background-origin: 100% 100%;background-size: cover;" current-item-id="{{item.id}}">
                     <view class="swiperBottom" bindtap="goStoreDetail" id="{{item.id}}">
                         <view class="title">{{item.storename||''}}</view>
                         <image class="iconImg" src="../asset/15.png" alt=""/>

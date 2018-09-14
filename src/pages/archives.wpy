@@ -111,14 +111,22 @@
             }
         }
         mixins = [mixin]
-        getChildInfo(data) {
-            this.weight = data.weight
-            this.height = data.height
-            this.year = new Date().getFullYear()-new Date(data.birthday).getFullYear()
-            this.nickName = data.nickname
-            this.sexName = data.sexname
-            this.avatarUrl = this.baseUrl + data.avatarurl
-            this.$apply()
+        getChildInfo(id) {
+            const self = this
+            request('getChildInfo', {id: id}).then(res => {
+                console.log(res.data);
+
+                self.weight = res.data.weight
+                self.height = res.data.height
+                self.year = new Date().getFullYear()-new Date(res.data.birthday).getFullYear()
+                self.nickName = res.data.nickname
+                self.sexName = res.data.sexname
+                self.avatarUrl = self.baseUrl + res.data.avatarurl
+                self.$apply()
+            }).catch(err => {
+
+            })
+
         }
 
         getRecordSelf(page){
@@ -139,20 +147,18 @@
             })
         }
         onShow(){
+            if(this.id){
+                this.getChildInfo(this.id)
+            }
             this.getRecordSelf()
         }
+
         onLoad(option){
             console.log(option);
             const self = this
             if(option.id){
                 self.id=option.id
-                request('getChildInfo', {id: option.id}).then(res => {
-                    console.log(res.data);
-
-                    self.getChildInfo(res.data)
-                }).catch(err => {
-
-                })
+                self.getChildInfo(self.id)
             }else {
                 //未关联任何孩子
                 wepy.navigateTo({url:'addChildren'})

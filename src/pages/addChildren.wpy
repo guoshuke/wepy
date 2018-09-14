@@ -284,6 +284,7 @@
                 }).catch(err=>{
                     console.log(err);
                 })
+                wepy.setStorage({key: 'userInfo', data: e.detail.userInfo})
             }
             request('addChildren', sendData).then((res) => {
                 console.log(res);
@@ -293,6 +294,18 @@
                     if (!self.data.childrenId) {
                         wepy.setStorage({key: 'defaultChildId', data: {id: res.data.id,nickname:res.data.nickname}})
                     }
+                    var oldChildrenList = wx.getStorageSync('childrenList')
+                    if(!sendData.id){  //add
+                        wepy.setStorage({key: 'childrenList', data:oldChildrenList.concat(res.data)})
+                    }else { //update
+                        oldChildrenList.forEach(item=>{
+                            if(item.id==sendData.id){
+                                item=res.data
+                            }
+                        })
+                        wepy.setStorage({key: 'childrenList', data:oldChildrenList})
+                    }
+
 
                     setTimeout(function () {
                         wepy.navigateBack({

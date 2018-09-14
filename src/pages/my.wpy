@@ -59,6 +59,9 @@
             this.$parent.getGlobalData(this)
 
         }
+        onLoad(){
+
+        }
 
         goArchives(e) {
             const tempId=e.currentTarget.dataset.index
