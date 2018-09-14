@@ -92,7 +92,6 @@
                 wepy.navigateTo({url: 'upload?id='+this.data.id})
             },
             goVision:function(){
-                debugger
                 wepy.navigateTo({url: 'vision?id='+this.data.id})
             },
             scrollBottom:function () {
@@ -174,17 +173,15 @@
             if(this.id){
                 this.getChildInfo(this.id)
             }
-            this.getRecordSelf()
+            this.onPullDownRefresh()
         }
 
         onLoad(option){
             console.log(option);
             const self = this
-            if(option.id){
-                self.id=option.id
-                self.getChildInfo(self.id)
-            }else {
-                //未关联任何孩子
+            this.id=option.id
+            if(!option.id){
+                //未选择任何孩子
                 wepy.navigateTo({url:'addChildren'})
             }
 
@@ -326,7 +323,7 @@
         height: 38rpx;
         position: absolute;
         left:-17rpx;
-        top:1rpx;
+        top:5rpx;
     }
     .dataTitleName{
         font-size: 18px;
@@ -335,12 +332,11 @@
         margin-left: 8vw;
     }
     .imgs{
-        width:100%;
+        width:80vw;
+        display: flex;
         flex-wrap:nowrap;
         padding-left:8vw;
         white-space:nowrap;
-        overflow:scroll;
-
     }
     .dataImg{
         display: inline-block;

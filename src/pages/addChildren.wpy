@@ -116,7 +116,7 @@
 
             deleteChildren() {
                 const self = this
-                let defaultChildId = wepy.getStorageSync('defaultChildId').id
+                let defaultChildId = wepy.getStorageSync('defaultChild')
                 if(defaultChildId.id==this.data.childrenId){
                     wx.showToast({title:'不能删除默认的孩子',icon:'none'})
                     return
@@ -297,7 +297,7 @@
                     wepy.showToast({title: res.message})
                     
                     if (!self.data.childrenId) {
-                        wepy.setStorage({key: 'defaultChildId', data: {id: res.data.id,nickname:res.data.nickname}})
+                        wepy.setStorage({key: 'defaultChild', data: {id: res.data.id,nickname:res.data.nickname}})
                     }
                     var oldChildrenList = wx.getStorageSync('childrenList')
                     if(!sendData.id){  //add
