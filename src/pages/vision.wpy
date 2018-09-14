@@ -2,7 +2,7 @@
     .container{
         background-color: #f3f3f3;
         justify-content: inherit;
-        height: 100vh;
+        width: 100vw;
     }
     .tip{
         padding:3vw 4vw;
@@ -213,27 +213,79 @@
 
     export default class vision extends wepy.page {
         config = {
-            navigationBarTitleText: '视力统计'
+            navigationBarTitleText: '视力统计',
+            enablePullDownRefresh:true//允许整个页面滚动上拉下拉加载数据
         }
         data = {
-            inspect:[]
+            page:1,
+            total:11,
+            inspect:[],
+            id:''
         }
         methods={
-            changeIndex:function (e) {
 
+        }
+        // 下拉刷新
+        onPullDownRefresh () {
+            // 显示顶部刷新图标
+            wx.showNavigationBarLoading();
+            this.page=1
+            this.total=11
+            this.inspect=[]
+            this.$apply()
+            this.getVisionStats(this.page)
+        }
+        onReachBottom () {
+            var that = this;
+            // 显示加载图标
+            wx.showLoading({
+                title: '玩命加载中',
+            })
+            // 页数+1
+            if(this.total<this.data.page*10){
+                wx.hideLoading();
+                return
             }
+            this.page=this.data.page+1
+            this.$apply()
+            this.getVisionStats(this.page)
+
+
+        }
+
+        getVisionStats(page){
+            const self = this
+            var sendData={
+                id:self.data.id,
+                store_id:wepy.getStorageSync('storeId'),
+                page:page
+            }
+            request('getVisionStats',sendData).then(res=>{
+                self.inspect = self.inspect.concat(res.data.rows)
+                self.$apply()
+                console.log(self.inspect);
+                wx.hideNavigationBarLoading();
+                // 停止下拉动作
+                wx.stopPullDownRefresh();
+                // 隐藏加载框
+                wx.hideLoading();
+            }).catch(err=>{
+                console.log(err);
+                wx.hideNavigationBarLoading();
+                // 停止下拉动作
+                wx.stopPullDownRefresh();
+                // 隐藏加载框
+                wx.hideLoading();
+
+            })
         }
         mixins = [testMixin]
 
         onLoad(option){
             const self = this
-            request('getVisionStats',{id:wepy.getStorageSync('defaultChildId')}).then(res=>{
-                self.inspect = res.data
-                self.$apply()
-                console.log(self.inspect);
-            }).catch(err=>{
-                console.log(err);
-            })
+            self.id=option.id
+            self.onPullDownRefresh()
+            self.$apply()
         }
 
     }

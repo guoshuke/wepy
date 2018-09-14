@@ -1,5 +1,5 @@
 <template>
-    <scroll-view  scroll-y class="container"  bindscrolltolower="scrollBottom" bindscrolltoupper="scrollTop">
+    <view class="container">
         <div class="top">
             <view class="leftImg">
                 <image class="img" src="{{avatarUrl}}"/>
@@ -49,7 +49,7 @@
             <block wx:for="{{list}}" wx:key="{{item.id}}">
                 <div class="items">
                     <div class="dataTitle"><image class="iconLeft" src="../asset/24.png"/> <div class="dataTitleName">{{item.check_time+' '+ item.check_place}}</div></div>
-                    <scroll-view class="imgs">
+                    <scroll-view scroll-x class="imgs">
                         <block wx:for="{{item.image}}" wx:key="{{index}}">
                             <image class="dataImg" src="{{baseUrl+item.image}}"/>
                         </block>
@@ -57,7 +57,7 @@
                 </div>
             </block>
         </view>
-    </scroll-view>
+    </view>
 </template>
 <script>
     import wepy from 'wepy'
@@ -66,7 +66,8 @@
 
     export default class archives extends wepy.page {
         config = {
-            navigationBarTitleText: '健康档案'
+            navigationBarTitleText: '健康档案',
+            enablePullDownRefresh:true//允许整个页面滚动上拉下拉加载数据
         }
         data = {
             id:'',
@@ -91,24 +92,37 @@
                 wepy.navigateTo({url: 'upload?id='+this.data.id})
             },
             goVision:function(){
-                wepy.navigateTo({url: 'vision'})
+                debugger
+                wepy.navigateTo({url: 'vision?id='+this.data.id})
             },
             scrollBottom:function () {
-                if(this.total<this.data.page*10){
-                    return
-                }
-                this.page=this.data.page+1
-                this.$apply()
-
-                this.getRecordSelf(this.page)
             },
             scrollTop(){
-                this.page=1
-                this.total=11
-                this.list=[]
-                this.$apply()
-                this.getRecordSelf(this.page)
             }
+        }
+        // 下拉刷新
+        onPullDownRefresh () {
+            // 显示顶部刷新图标
+            wx.showNavigationBarLoading();
+            this.page=1
+            this.total=11
+            this.list=[]
+            this.$apply()
+            this.getRecordSelf(this.page)
+        }
+        onReachBottom () {
+            // 显示加载图标
+            wx.showLoading({
+                title: '玩命加载中',
+            })
+            if(this.total<this.data.page*10){
+                wx.hideLoading();
+                return
+            }
+            this.page=this.data.page+1
+            this.$apply()
+
+            this.getRecordSelf(this.page)
         }
         mixins = [mixin]
         getChildInfo(id) {
@@ -139,10 +153,20 @@
             }
             request('getRecordSelf',sendData).then(res=>{
                 console.log(res);
+                wx.hideNavigationBarLoading();
+                // 停止下拉动作
+                wx.stopPullDownRefresh();
+                // 隐藏加载框
+                wx.hideLoading();
                 self.list = self.data.list.concat(res.data.rows)
                 self.total=res.data.total
                 self.$apply()
             }).catch(err=>{
+                wx.hideNavigationBarLoading();
+                // 停止下拉动作
+                wx.stopPullDownRefresh();
+                // 隐藏加载框
+                wx.hideLoading();
                 console.log(err);
             })
         }
@@ -169,7 +193,6 @@
 </script>
 <style>
     .container {
-        height: 100vh;
         width: 100vw;
         display: flex;
         flex-direction: column;

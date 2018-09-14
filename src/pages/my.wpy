@@ -77,7 +77,7 @@
             goDetail(e) {
                 if (e.detail.userInfo) {
                     let self = this
-                    let user = this.data.userInfo.nickName
+                    let user = wx.getStorageSync('userInfo').nickName
 
                     if (!user) {
 

@@ -42,7 +42,7 @@
     export default class heightOrWeight extends wepy.page {
 
         config = {
-            navigationBarTitleText: "身高体重"
+            navigationBarTitleText: "身高体重",
         }
 
         data = {
@@ -55,7 +55,11 @@
 
         methods = {
             scrollBottom:function (e) {
+                wx.showLoading({
+                    title: '玩命加载中',
+                })
                 if(this.data.size*this.data.page>this.data.total){
+                    wx.hideLoading();
                     return
                 }else {
                     const self=this
@@ -65,8 +69,10 @@
                         self.list=self.list.concat(res.data.rows)
                         this.page=this.data.page+1
                         self.$apply()
+                        wx.hideLoading();
                     }).catch(err=>{
                         console.log(err);
+                        wx.hideLoading();
                     })
                 }
             },

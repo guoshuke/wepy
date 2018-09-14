@@ -258,12 +258,17 @@
                 return
             }
             let sendData = {
-                avatar: this.data.avatarUrl,
                 nickname: this.data.nickName,
                 sex: this.data.index,
                 birthday: this.data.date,
                 height: this.data.height,
                 weight: this.data.weight
+            }
+            if(!this.data.avatarUrl){
+                wx.showToast({title: '必须上传头像',icon:'none'})
+            }
+            if(this.data.avatarUrl.indexOf('uploads')==-1){
+                sendData.avatar=this.data.avatarUrl
             }
             if (this.data.childrenId) {
                 sendData.id = this.data.childrenId

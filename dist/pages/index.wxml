@@ -1,5 +1,5 @@
 
-    <scroll-view scroll-y class="container"  wx:if="{{defaultChildId}}" bindscrolltolower="scrollBottom" bindscrolltoupper="scrollTop">
+    <view class="container"  wx:if="{{defaultChildId}}">
 
         <view class="topBar" bindtap="show">
             <view>{{defaultChildName}}</view>
@@ -66,7 +66,7 @@
                 </view>
             </view>
         </view>
-    </scroll-view>
+    </view>
     <view class="container container2"  wx:if="{{!defaultChildId}}">
         <view class="addFristChild" bindtap="goAddChildren">关联孩子</view>
     </view>

@@ -1,6 +1,7 @@
 .container {
   width: 100vw;
   height: 100vh;
+  justify-content: flex-start;
 }
 view {
   font-size: 14px;
@@ -26,6 +27,9 @@ view {
   border-bottom: 1px solid #f4f4f4;
   border-top: 1px solid #f4f4f4;
   padding: 15rpx;
+  position: fixed;
+  z-index: 10;
+  background-color: #fff;
 }
 .modal-box {
   position: fixed;
@@ -93,8 +97,10 @@ view {
   flex: 1;
 }
 .swiper {
-  height: 170px;
+  height: 220px!important;
   width: 100vw;
+  justify-content: flex-start;
+  margin-top: 80rpx;
 }
 .bg {
   background: url("http://glass.unimker.com/assets/images/photo001.png") no-repeat center center;
