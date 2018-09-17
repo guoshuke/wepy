@@ -178,9 +178,7 @@
                                     // 4. base64编码
 
                                     let base64 = wx.arrayBufferToBase64(pngData)
-
-                                    console.log('data:image/jpeg;base64,' + base64)
-                                    let newBase64 = 'data:image/jpeg;base64,' + base64
+                                    //let newBase64 = 'data:image/jpeg;base64,' + base64
 //                                    self.setData({
 //                                        avatarUrl: 'data:image/jpeg;base64,' + base64
 //                                    });
@@ -257,6 +255,28 @@
                 wx.showToast({title: '需要您的授权',icon:'none'})
                 return
             }
+            let user = wx.getStorageSync('userInfo').nickName
+
+            if (!user) {
+
+                self.userInfo = e.detail.userInfo
+                let sendUserInfoData={
+                    nickName:self.userInfo.nickName,
+                    avatarUrl:self.userInfo.avatarUrl,
+                    sex:self.userInfo.gender
+                }
+                request('authBind',sendUserInfoData).then(res=>{
+                    console.log(res);
+
+                    if(res.code1!=1){
+                        wx.showToast({title: res.message,icon:'none'})
+                    }
+                }).catch(err=>{
+                    console.log(err);
+                })
+                self.$apply()
+                wepy.setStorage({key: 'userInfo', data: self.userInfo})
+            }
             let sendData = {
                 nickname: this.data.nickName,
                 sex: this.data.index,
@@ -266,9 +286,11 @@
             }
             if(!this.data.avatarUrl){
                 wx.showToast({title: '必须上传头像',icon:'none'})
+                return
             }
             if(this.data.avatarUrl.indexOf('uploads')==-1){
                 sendData.avatar=this.data.avatarUrl
+
             }
             if (this.data.childrenId) {
                 sendData.id = this.data.childrenId
@@ -295,8 +317,8 @@
                 console.log(res);
                 if (res.code == 1) {
                     wepy.showToast({title: res.message})
-                    
-                    if (!self.data.childrenId) {
+                    //默认孩子为最近添加的孩子  如果要改成之前的不变的话  把true改成   !self.data.childrenId
+                    if (true) {
                         wepy.setStorage({key: 'defaultChild', data: {id: res.data.id,nickname:res.data.nickname}})
                     }
                     var oldChildrenList = wx.getStorageSync('childrenList')

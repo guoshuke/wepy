@@ -2,7 +2,7 @@
     <view class="container">
         <button class="userInfo" bindgetuserinfo="goDetail" open-type="getUserInfo">
             <open-data wx:if="{{!userInfo.avatarUrl}}" type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar"></open-data>
-            <open-data wx:if="{{!userInfo.nickName}}" type="userNickName mt0" id="userName" class="userinfo-nickname"></open-data>
+            <open-data wx:if="{{!userInfo.nickName}}" type="userNickName" id="userName" class="userinfo-nickname mt0"></open-data>
             <image wx:if="{{userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="userinfo-avatar"></image>
             <view wx:if="{{userInfo.nickName}}" class="userinfo-nickname mt0">{{userInfo.nickName}}</view>
         </button>
@@ -56,7 +56,7 @@
         }
 
         onShow() {
-            this.$parent.getGlobalData(this)
+            //this.$parent.getGlobalData(this)
 
         }
         onLoad(){

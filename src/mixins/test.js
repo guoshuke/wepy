@@ -22,6 +22,7 @@ export default class testMixin extends wepy.mixin {
 
     onShow() {
         console.log('mixin onShow')
+        this.$parent.getGlobalData(this)
 
     }
 

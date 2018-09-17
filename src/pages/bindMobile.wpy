@@ -128,7 +128,7 @@
 
 
         onLoad(option) {
-            this.$parent.getGlobalData(this)
+            //this.$parent.getGlobalData(this)
         }
     }
 </script>

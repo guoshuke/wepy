@@ -26,6 +26,9 @@
     .icon-left:before {
         content: "\e600";
     }
+    button::after{
+        border: none;
+    }
 
 
 </style>

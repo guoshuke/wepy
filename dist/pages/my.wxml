@@ -2,7 +2,7 @@
     <view class="container _4afdeb5">
         <button class="userInfo _4afdeb5" bindgetuserinfo="goDetail" open-type="getUserInfo">
             <open-data  wx:if="{{!userInfo.avatarUrl}}" type="userAvatarUrl" id="avatarUrl" class="userinfo-avatar _4afdeb5"/>
-            <open-data  wx:if="{{!userInfo.nickName}}" type="userNickName mt0" id="userName" class="userinfo-nickname _4afdeb5"/>
+            <open-data  wx:if="{{!userInfo.nickName}}" type="userNickName" id="userName" class="userinfo-nickname mt0 _4afdeb5"/>
             <image  wx:if="{{userInfo.avatarUrl}}" src="{{userInfo.avatarUrl}}" class="userinfo-avatar _4afdeb5"/>
             <view wx:if="{{userInfo.nickName}}" class="userinfo-nickname mt0 _4afdeb5">{{userInfo.nickName}}</view>
         </button>

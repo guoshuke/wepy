@@ -47,32 +47,32 @@
         font-weight: 400;
     }
     .img17{
-        background: url('http://glass.unimker.com/assets/images/photo001.png') no-repeat center center;
+        background: url('https://glass.unimker.com/assets/images/photo001.png') no-repeat center center;
         background-origin: 100%;
         background-size: cover;
     }
     .img18{
-        background: url('http://glass.unimker.com/assets/images/photo002.png') no-repeat center center;
+        background: url('https://glass.unimker.com/assets/images/photo002.png') no-repeat center center;
         background-origin: 100%;
         background-size: cover;
     }
     .img19{
-        background: url('http://glass.unimker.com/assets/images/photo003.png') no-repeat center center;
+        background: url('https://glass.unimker.com/assets/images/photo003.png') no-repeat center center;
         background-origin: 100%;
         background-size: cover;
     }
     .img20{
-        background: url('http://glass.unimker.com/assets/images/photo004.png') no-repeat center center;
+        background: url('https://glass.unimker.com/assets/images/photo004.png') no-repeat center center;
         background-origin: 100%;
         background-size: cover;
     }
     .img21{
-        background: url('http://glass.unimker.com/assets/images/photo005.png') no-repeat center center;
+        background: url('https://glass.unimker.com/assets/images/photo005.png') no-repeat center center;
         background-origin: 100%;
         background-size: cover;
     }
     .img22{
-        background: url('http://glass.unimker.com/assets/images/photo006.png') no-repeat center center;
+        background: url('https://glass.unimker.com/assets/images/photo006.png') no-repeat center center;
         background-origin: 100%;
         background-size: cover;
     }
@@ -145,11 +145,11 @@
                 let self = this
                 if (e.detail.userInfo) {
                     let self = this
-                    if(!self.userInfo.nickName) {
+                    if(!wx.getStorageSync('defaultChild').nickname) {
                         let sendData={
-                            nickName:self.userInfo.nickName,
-                            avatarUrl:self.userInfo.avatarUrl,
-                            sex:self.userInfo.gender
+                            nickName:e.detail.userInfo.nickName,
+                            avatarUrl:e.detail.userInfo.avatarUrl,
+                            sex:e.detail.userInfo.gender
                         }
                         request('authBind',sendData).then(res=>{
                             console.log(res);
@@ -179,11 +179,11 @@
                 let self = this
                 if (e.detail.userInfo) {
                     let self = this
-                    if(!self.userInfo.nickName) {
+                    if(!wx.getStorageSync('defaultChild').nickname) {
                         let sendData={
-                            nickName:self.userInfo.nickName,
-                            avatarUrl:self.userInfo.avatarUrl,
-                            sex:self.userInfo.gender
+                            nickName:e.detail.userInfo.nickName,
+                            avatarUrl:e.detail.userInfo.avatarUrl,
+                            sex:e.detail.userInfo.gender
                         }
                         request('authBind',sendData).then(res=>{
                             console.log(res);

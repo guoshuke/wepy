@@ -34,6 +34,7 @@
             navigationBarTitleText: '问卷调查表'
         }
         data = {
+            isLoad:false,
             code:null,
             question: [],//全部的问题
             answerList:[],//问题答案
@@ -49,9 +50,6 @@
             }
 
         }
-        onUnload(){
-            wepy.navigateBack({delta:2})
-        }
         methods = {
             goNext:function(e){
                 if(this.data.selectIndex === null){
@@ -63,10 +61,6 @@
                     "id": e.target.dataset.id,
                     "answer": this.data.selectIndex
                 })
-                this.selectIndex=null
-                this.currentTab=this.data.currentTab+1
-
-
                 this.$apply()
                 console.log(this.data.sum)
                 const self = this
@@ -85,6 +79,8 @@
                         console.log(err)
                     })
                 }else {
+                    this.selectIndex=null
+                    this.currentTab=this.data.currentTab+1
                     this.getAnswerList(this.data.question[this.currentTab].id)
                     this.$apply()
                 }
@@ -97,18 +93,21 @@
             },
 
         }
-        onLoad(option){
-            console.log(option);
+        onShow(){
+            this.question = []//全部的问题
+            this.answerList = []//问题答案
+            this.currentTab = null//调查表索引
+            this.selectIndex = null//选中状态 第几个答案被选中了
+            this.sum = 0//得分总和
+            this.sendData.question=[]
+            if(this.data.isLoad){
+                this.getPaperDetail()
+            }
+
+        }
+        getPaperDetail(){
             const self = this
-            this.needSum=!!option.needSum
-//            request('getPaperList').then(res=> {
-//                res =JSON.parse(res.data)
-//                console.log(res);
-//            }).catch(err=>{
-//                console.log(err);
-//            })
-            self.code=self.sendData.paper_code=option.code
-            request('getPaperDetail',{code:option.code}).then(res=> {
+            request('getPaperDetail',{code:this.data.code}).then(res=> {
                 //res =JSON.parse(res.data)
                 console.log(res);
                 self.question=res.data.question
@@ -121,6 +120,21 @@
             }).catch(err=>{
                 console.log(err);
             })
+        }
+        onLoad(option){
+            console.log(option);
+            const self = this
+            this.needSum=!!option.needSum
+//            request('getPaperList').then(res=> {
+//                res =JSON.parse(res.data)
+//                console.log(res);
+//            }).catch(err=>{
+//                console.log(err);
+//            })
+            self.code = self.sendData.paper_code = option.code
+            self.isLoad=true
+            self.$apply()
+
         }
         getAnswerList(id){
             const self = this

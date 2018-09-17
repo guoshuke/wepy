@@ -1,22 +1,36 @@
 <template>
     <view class="container">
-        <web-view src="https://mp.weixin.qq.com/mp/homepage?__biz=MzU1MDE4Mzc5Mw==&hid=1&sn=9c1a38d4add043a3cf9d85fa0a40e98e&scene=18#wechat_redirect"></web-view>
+        <web-view src="{{url}}"></web-view>
     </view>
 </template>
 <script>
     import wepy from 'wepy'
     import testMixin from '../mixins/test'
-//    import request   from '../mixins/service'
+    import request   from '../mixins/service'
 
     export default class information extends wepy.page {
         config = {
             navigationBarTitleText: '资讯'
         }
-        data = {
+        getSysList(){
+            const self = this
+            debugger
+            request('getSysList').then(res=>{
+                console.log(res);
+                self.url = res.data[0].value
+                self.$apply()
 
+            }).catch(err=>{
+                console.log(err);
+            })
+        }
+        data = {
+            url:''//https://mp.weixin.qq.com/mp/homepage?__biz=MzU1MDE4Mzc5Mw==&hid=1&sn=9c1a38d4add043a3cf9d85fa0a40e98e&scene=18#wechat_redirect
         }
         mixins = [testMixin]
-
+        onLoad(){
+            this.getSysList()
+        }
     }
 </script>
 <style lang="less" scoped>

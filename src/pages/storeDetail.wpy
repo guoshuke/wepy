@@ -7,7 +7,7 @@
             <div class="list">
                 <div class="item" @tap="goLocation">
                     <image class="iconAddress" src="../asset/27.png" alt=""/>
-                    <div class="text flex1">{{allData.cityarea}}</div>
+                    <div class="text flex1">{{allData.address}}</div>
                     <image src="../asset/29.png" class="iconGo" alt=""/>
                 </div>
             </div>
@@ -104,7 +104,7 @@
     .bg{
         height: 170px;
         width: 100vw;
-        background: url("http://glass.unimker.com/assets/images/photo001.png") no-repeat center center;
+        background: url("https://glass.unimker.com/assets/images/photo001.png") no-repeat center center;
         background-size: cover;
         display: flex;
         align-items: flex-end;

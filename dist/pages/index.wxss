@@ -103,7 +103,6 @@ view {
   margin-top: 80rpx;
 }
 .bg {
-  background: url("http://glass.unimker.com/assets/images/photo001.png") no-repeat center center;
   background-size: cover;
   display: flex;
   align-items: flex-end;
@@ -146,7 +145,7 @@ view {
   flex-direction: column;
 }
 .year {
-  background: url("http://glass.unimker.com/assets/images/b004.png") no-repeat center center;
+  background: url("https://glass.unimker.com/assets/images/b004.png") no-repeat center center;
   background-size: cover;
   width: 13vw;
   height: 6vw;

@@ -36,15 +36,23 @@
             currScore:'',
             currReference:'',
             currIntroduce:'',
-            grading:[]
+            grading:[],
+            isBack:true
         }
         onUnload(){
-            wepy.navigateBack({delta:2})
+            if(this.data.isBack){
+                wx.switchTab({
+                    url: 'selfSearch'
+                })
+            }
+
         }
 
         methods = {
             reassessmentFunc(){
-                wepy.navigateTo({url:'questionnaire?code=exam2&needSum=true'})
+                this.isBack = false
+                this.$apply()
+                wx.navigateBack()
 
             }
         }
@@ -89,7 +97,7 @@
 <style>
     /*大于28是9.png*/
     .redbg{
-        background:url(http://glass.unimker.com/assets/images/b001.png) no-repeat;
+        background:url(https://glass.unimker.com/assets/images/b001.png) no-repeat;
         background-size: 100% 100%;
     }
     .redcolor{
@@ -97,7 +105,7 @@
     }
     /*大于16小于28是11.png*/
     .bluebg{
-        background:#FFF url(http://glass.unimker.com/assets/images/b002.png) no-repeat;
+        background:#FFF url(https://glass.unimker.com/assets/images/b002.png) no-repeat;
         background-size: 100% 100%;
     }
     .bluecolor{
@@ -105,7 +113,7 @@
     }
     /*小于16是10.png*/
     .greenbg{
-        background:#FFF url(http://glass.unimker.com/assets/images/b003.png) no-repeat;
+        background:#FFF url(https://glass.unimker.com/assets/images/b003.png) no-repeat;
         background-size: 100% 100%;
     }
     .greencolor{

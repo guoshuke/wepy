@@ -1,7 +1,8 @@
 import wepy from 'wepy'
 
-let baseUrl='http://glass.unimker.com/api/'
+let baseUrl='https://glass.unimker.com/api/'
 let request =function (url,data,type){
+    wx.showLoading()
     var baseData = wepy.getStorageSync('baseData')
     return new Promise(function(resolve,reject){
         //网络请求
@@ -26,6 +27,7 @@ let request =function (url,data,type){
             },
             complete: function(res) {
                 // complete
+                wx.hideLoading();
             }
         })
     })
